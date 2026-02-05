@@ -4,7 +4,7 @@ const SecurityLogsView = () => {
     const [logs, setLogs] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:5000/api/logs')
+        fetch('${import.meta.env.VITE_API_URL}/api/logs')
             .then(res => res.json())
             .then(data => setLogs(data))
             .catch(err => console.error(err));

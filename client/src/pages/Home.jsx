@@ -12,7 +12,7 @@ const Home = () => {
 
     useEffect(() => {
         // Fetch featured reviews
-        fetch('http://localhost:5000/api/reviews/featured')
+        fetch('${import.meta.env.VITE_API_URL}/api/reviews/featured')
             .then(res => res.json())
             .then(data => setFeaturedReviews(data))
             .catch(err => console.error("Failed to fetch featured reviews"));
@@ -27,7 +27,7 @@ const Home = () => {
     const [loading, setLoading] = React.useState(true);
 
     React.useEffect(() => {
-        fetch('http://localhost:5000/api/products')
+        fetch('${import.meta.env.VITE_API_URL}/api/products')
             .then(res => res.json())
             .then(data => {
                 // Determine "featured" logic: e.g., top rated or just first 3

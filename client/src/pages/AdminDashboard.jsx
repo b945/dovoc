@@ -33,26 +33,26 @@ const AdminDashboard = () => {
 
     const fetchData = () => {
         // Fetch orders
-        fetch('http://localhost:5000/api/orders')
+        fetch('${import.meta.env.VITE_API_URL}/api/orders')
             .then(res => res.json())
             .then(data => setOrders(data))
             .catch(err => console.error("Failed to fetch orders"));
 
         // Fetch products
-        fetch('http://localhost:5000/api/products')
+        fetch('${import.meta.env.VITE_API_URL}/api/products')
             .then(res => res.json())
             .then(data => setProducts(data))
             .catch(err => console.error("Failed to fetch products"));
 
         // Fetch reviews
-        fetch('http://localhost:5000/api/reviews/all')
+        fetch('${import.meta.env.VITE_API_URL}/api/reviews/all')
             .then(res => res.json())
             .then(data => setReviews(data))
             .catch(err => console.error("Failed to fetch reviews"));
 
         // Fetch users (if super_admin) but we can just fetch and handle error or check role first
         // Simple check: if we are logged in, we try to fetch. The backend should ideally protect this.
-        fetch('http://localhost:5000/api/users')
+        fetch('${import.meta.env.VITE_API_URL}/api/users')
             .then(res => res.json())
             .then(data => setUsers(data))
             .catch(err => console.error("Failed to fetch users"));
@@ -60,7 +60,7 @@ const AdminDashboard = () => {
 
     const updateStatus = async (id, status) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/orders/${id}/status`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/orders/${id}/status`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status })
@@ -77,7 +77,7 @@ const AdminDashboard = () => {
     const handleDeleteOrder = async (id) => {
         if (!window.confirm("Are you sure you want to delete this order permanently?")) return;
         try {
-            const response = await fetch(`http://localhost:5000/api/orders/${id}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/orders/${id}`, {
                 method: 'DELETE'
             });
 
@@ -103,7 +103,7 @@ const AdminDashboard = () => {
         const userData = Object.fromEntries(formData.entries());
 
         try {
-            const res = await fetch('http://localhost:5000/api/users', {
+            const res = await fetch('${import.meta.env.VITE_API_URL}/api/users', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(userData)
@@ -123,7 +123,7 @@ const AdminDashboard = () => {
     const handleDeleteUser = async (id) => {
         if (!window.confirm("Delete this user?")) return;
         try {
-            await fetch(`http://localhost:5000/api/users/${id}`, { method: 'DELETE' });
+            await fetch(`${import.meta.env.VITE_API_URL}/api/users/${id}`, { method: 'DELETE' });
             setUsers(users.filter(u => u.id !== id));
         } catch (err) {
             console.error(err);
@@ -133,7 +133,7 @@ const AdminDashboard = () => {
     const handleDeleteProduct = async (id) => {
         if (!window.confirm("Are you sure you want to delete this product?")) return;
         try {
-            const res = await fetch(`http://localhost:5000/api/products/${id}`, { method: 'DELETE' });
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/products/${id}`, { method: 'DELETE' });
             if (res.ok) {
                 setProducts(products.filter(p => p.id !== id));
                 // Optional: Show success notification
@@ -149,7 +149,7 @@ const AdminDashboard = () => {
 
     const handleToggleFeature = async (review) => {
         try {
-            const res = await fetch(`http://localhost:5000/api/reviews/${review.id}/feature`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/reviews/${review.id}/feature`, {
                 method: 'PATCH'
             });
             if (res.ok) {
@@ -189,8 +189,8 @@ const AdminDashboard = () => {
 
         const method = editingProduct ? 'PUT' : 'POST';
         const url = editingProduct
-            ? `http://localhost:5000/api/products/${editingProduct.id}`
-            : 'http://localhost:5000/api/products';
+            ? `${import.meta.env.VITE_API_URL}/api/products/${editingProduct.id}`
+            : '${import.meta.env.VITE_API_URL}/api/products';
 
         try {
             const res = await fetch(url, {
@@ -585,7 +585,7 @@ const AdminDashboard = () => {
                                     btn.disabled = true;
                                     btn.textContent = "Sending...";
 
-                                    const res = await fetch('http://localhost:5000/api/newsletter/broadcast', {
+                                    const res = await fetch('${import.meta.env.VITE_API_URL}/api/newsletter/broadcast', {
                                         method: 'POST',
                                         headers: { 'Content-Type': 'application/json' },
                                         body: JSON.stringify(data)
@@ -811,7 +811,7 @@ const AdminDashboard = () => {
                                                     try {
                                                         // Show loading state if needed
                                                         e.target.disabled = true;
-                                                        const res = await fetch('http://localhost:5000/api/upload', {
+                                                        const res = await fetch('${import.meta.env.VITE_API_URL}/api/upload', {
                                                             method: 'POST',
                                                             body: formData
                                                         });

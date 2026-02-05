@@ -18,13 +18,13 @@ const ProductDetail = () => {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/api/products`);
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products`);
                 const data = await response.json();
                 const found = data.find(p => p.id === parseInt(id));
                 setProduct(found);
 
                 // Fetch reviews
-                const reviewsRes = await fetch(`http://localhost:5000/api/reviews/product/${id}`);
+                const reviewsRes = await fetch(`${import.meta.env.VITE_API_URL}/api/reviews/product/${id}`);
                 const reviewsData = await reviewsRes.json();
                 setReviews(reviewsData);
             } catch (err) {
@@ -39,7 +39,7 @@ const ProductDetail = () => {
     const handleReviewSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch('http://localhost:5000/api/reviews', {
+            const res = await fetch('${import.meta.env.VITE_API_URL}/api/reviews', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ ...newReview, productId: id })

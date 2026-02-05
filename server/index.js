@@ -104,12 +104,18 @@ const seedDatabase = async () => {
 
 // Check DB and Seed on startup
 if (db) {
-    seedDatabase();
+    // seedDatabase(); // logic exists but commented out
 }
 
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-    if (!db) {
-        console.log("⚠️  WARNING: Firebase DB not connected. Check serviceAccountKey.json.");
-    }
-});
+// Export for Vercel
+module.exports = app;
+
+// Only listen if running directly (not required by Vercel)
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server running on http://localhost:${PORT}`);
+        if (!db) {
+            console.log("⚠️  WARNING: Firebase DB not connected. Check serviceAccountKey.json.");
+        }
+    });
+}
