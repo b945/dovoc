@@ -1,0 +1,93 @@
+[
+  {
+    "id": 1769192465048,
+    "timestamp": "2026-01-23T18:21:05.048Z",
+    "action": "LOGIN",
+    "user": "admin",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1769192657529,
+    "timestamp": "2026-01-23T18:24:17.529Z",
+    "action": "DELETE_PRODUCT",
+    "user": "Admin",
+    "details": "Deleted product ID: 1769190888836"
+  },
+  {
+    "id": 1769192670824,
+    "timestamp": "2026-01-23T18:24:30.824Z",
+    "action": "DELETE_PRODUCT",
+    "user": "Admin",
+    "details": "Deleted product ID: 1769191018467"
+  },
+  {
+    "id": 1770305809975,
+    "timestamp": "2026-02-05T15:36:49.975Z",
+    "action": "LOGIN",
+    "user": "admin",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770305835577,
+    "timestamp": "2026-02-05T15:37:15.577Z",
+    "action": "CREATE_PRODUCT",
+    "user": "Admin",
+    "details": "Created product: gsgs"
+  },
+  {
+    "id": 1770306862006,
+    "timestamp": "2026-02-05T15:54:22.006Z",
+    "action": "LOGIN",
+    "user": "admin",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770307031430,
+    "timestamp": "2026-02-05T15:57:11.430Z",
+    "action": "LOGIN",
+    "user": "admin",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770307163470,
+    "timestamp": "2026-02-05T15:59:23.470Z",
+    "action": "LOGIN",
+    "user": "admin",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770309959690,
+    "timestamp": "2026-02-05T16:45:59.690Z",
+    "action": "LOGIN",
+    "user": "admin",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770309993067,
+    "timestamp": "2026-02-05T16:46:33.067Z",
+    "action": "DELETE_PRODUCT",
+    "user": "Admin",
+    "details": "Deleted product ID: 1"
+  },
+  {
+    "id": 1770310001329,
+    "timestamp": "2026-02-05T16:46:41.329Z",
+    "action": "DELETE_PRODUCT",
+    "user": "Admin",
+    "details": "Deleted product ID: 2"
+  },
+  {
+    "id": 1770312078954,
+    "timestamp": "2026-02-05T17:21:18.954Z",
+    "action": "LOGIN",
+    "user": "admin",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770312088497,
+    "timestamp": "2026-02-05T17:21:28.497Z",
+    "action": "DELETE_PRODUCT",
+    "user": "Admin",
+    "details": "Deleted product ID: 3"
+  }
+]

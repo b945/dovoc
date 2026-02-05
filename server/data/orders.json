@@ -1,0 +1,37 @@
+[
+  {
+    "id": 572569,
+    "customer": {
+      "name": "dfghj",
+      "email": "amannasar39@gmail.com",
+      "phone": "2345678",
+      "address": "dfghj",
+      "city": "kjhbvc",
+      "zip": "45678"
+    },
+    "items": [
+      {
+        "id": 1770305835575,
+        "name": "gsgs",
+        "category": "Personal Care",
+        "price": 3000,
+        "rating": 5,
+        "image": "/assets/",
+        "images": [
+          "/assets/"
+        ],
+        "stock": 0,
+        "discount": 0,
+        "organic": false,
+        "handmade": false,
+        "isFeatured": false,
+        "isOutOfStock": false,
+        "description": "bgdd",
+        "quantity": 1
+      }
+    ],
+    "total": 3000,
+    "status": "Approved",
+    "createdAt": "2026-02-05T15:59:12.087Z"
+  }
+]
