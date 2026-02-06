@@ -42,8 +42,12 @@ router.post('/login', async (req, res) => {
             res.status(401).json({ success: false, message: "Invalid credentials" });
         }
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ success: false, message: "Server error" });
+        console.error("Login Error:", err);
+        res.status(500).json({
+            success: false,
+            message: "Server error: " + err.message,
+            stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+        });
     }
 });
 
