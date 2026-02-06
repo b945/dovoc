@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const { bucket } = require('../config/firebase');
+const cloudinary = require('../config/cloudinary');
 
 // Configure Multer (Memory Storage)
 const upload = multer({
@@ -18,39 +18,23 @@ router.post('/', upload.single('image'), async (req, res) => {
             return res.status(400).json({ message: "No file uploaded" });
         }
 
-        if (!bucket) {
-            return res.status(500).json({ message: "Storage bucket not configured" });
-        }
-
-        // Create a unique filename
-        const filename = `products/${Date.now()}_${req.file.originalname}`;
-        const file = bucket.file(filename);
-
-        // Prepare stream
-        const stream = file.createWriteStream({
-            metadata: {
-                contentType: req.file.mimetype
+        // Upload to Cloudinary via stream
+        const stream = cloudinary.uploader.upload_stream(
+            {
+                folder: "dovoc-products", // Optional folder
+            },
+            (error, result) => {
+                if (error) {
+                    console.error("Cloudinary Upload Error:", error);
+                    return res.status(500).json({ message: "Upload failed", error: error.message });
+                }
+                res.json({
+                    message: "Upload successful",
+                    url: result.secure_url,
+                    public_id: result.public_id
+                });
             }
-        });
-
-        stream.on('error', (err) => {
-            console.error(err);
-            res.status(500).json({ message: "Upload failed" });
-        });
-
-        stream.on('finish', async () => {
-            // Make public
-            await file.makePublic();
-
-            // Get Public URL
-            // Format: https://storage.googleapis.com/BUCKET_NAME/FILE_PATH
-            const publicUrl = `https://storage.googleapis.com/${bucket.name}/${filename}`;
-
-            res.json({
-                message: "Upload successful",
-                url: publicUrl
-            });
-        });
+        );
 
         stream.end(req.file.buffer);
 
