@@ -122,10 +122,12 @@ const seedDatabase = async () => {
     }
 };
 
-// Check DB and Seed on startup
-if (db) {
-    // seedDatabase(); // logic exists but commented out
-}
+// Setup Route (One-time use)
+app.get('/api/setup', async (req, res) => {
+    if (!db) return res.status(500).json({ message: "DB unconnected" });
+    await seedDatabase();
+    res.json({ message: "Setup complete. Admin user created if missing." });
+});
 
 // Global Error Handler
 app.use((err, req, res, next) => {
