@@ -219,7 +219,7 @@ const AdminDashboard = () => {
                 <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
                     <div className="flex items-center space-x-8">
                         <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-                        <nav className="flex space-x-4">
+                        <nav className="flex space-x-4 overflow-x-auto pb-2 scrollbar-hide">
                             <button
                                 onClick={() => setActiveTab('orders')}
                                 className={`px-3 py-2 rounded-md font-medium text-sm transition-colors ${activeTab === 'orders' ? 'bg-dovoc-green text-white' : 'text-gray-600 hover:bg-gray-200'}`}
@@ -760,7 +760,7 @@ const AdminDashboard = () => {
                                     <button type="button" onClick={() => setIsProductModalOpen(false)} className="text-gray-400 hover:text-gray-600"><X className="h-5 w-5" /></button>
                                 </div>
                                 <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
-                                    <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                             <label className="block text-xs font-bold text-gray-500 mb-1">Name</label>
                                             <input required name="name" defaultValue={editingProduct?.name} className="w-full border rounded px-3 py-2 text-sm" />
@@ -775,7 +775,7 @@ const AdminDashboard = () => {
                                             </select>
                                         </div>
                                     </div>
-                                    <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                             <label className="block text-xs font-bold text-gray-500 mb-1">Price (₹)</label>
                                             <input required type="number" step="0.01" name="price" defaultValue={editingProduct?.price} className="w-full border rounded px-3 py-2 text-sm" />
@@ -785,7 +785,7 @@ const AdminDashboard = () => {
                                             <input type="number" step="0.1" max="5" name="rating" defaultValue={editingProduct?.rating || 5} className="w-full border rounded px-3 py-2 text-sm" />
                                         </div>
                                     </div>
-                                    <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                             <label className="block text-xs font-bold text-gray-500 mb-1">Stock</label>
                                             <input required type="number" name="stock" defaultValue={editingProduct?.stock || 0} className="w-full border rounded px-3 py-2 text-sm" />

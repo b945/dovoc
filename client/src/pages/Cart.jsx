@@ -29,38 +29,40 @@ const Cart = () => {
                     <div className="flex-grow">
                         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
                             {cartItems.map((item) => (
-                                <div key={item.id} className="p-6 border-b border-gray-100 last:border-0 flex items-center gap-6">
-                                    <img src={item.image} alt={item.name} className="w-24 h-24 object-cover rounded-md" />
+                                <div key={item.id} className="p-4 sm:p-6 border-b border-gray-100 last:border-0 flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+                                    <img src={item.image} alt={item.name} className="w-full sm:w-24 h-48 sm:h-24 object-cover rounded-md" />
 
-                                    <div className="flex-grow">
+                                    <div className="flex-grow w-full text-center sm:text-left">
                                         <h3 className="text-lg font-bold text-dovoc-dark">{item.name}</h3>
                                         <p className="text-gray-500 text-sm mb-2">{item.category}</p>
                                         <div className="text-dovoc-green font-bold">₹{item.price.toFixed(2)}</div>
                                     </div>
 
-                                    <div className="flex items-center gap-3">
+                                    <div className="flex items-center justify-between w-full sm:w-auto gap-4">
+                                        <div className="flex items-center gap-3">
+                                            <button
+                                                onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                                className="p-1 rounded-full hover:bg-gray-100 text-gray-500"
+                                                disabled={item.quantity <= 1}
+                                            >
+                                                <Minus className="h-4 w-4" />
+                                            </button>
+                                            <span className="w-8 text-center font-medium">{item.quantity}</span>
+                                            <button
+                                                onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                                className="p-1 rounded-full hover:bg-gray-100 text-gray-500"
+                                            >
+                                                <Plus className="h-4 w-4" />
+                                            </button>
+                                        </div>
+
                                         <button
-                                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                                            className="p-1 rounded-full hover:bg-gray-100 text-gray-500"
-                                            disabled={item.quantity <= 1}
+                                            onClick={() => removeFromCart(item.id)}
+                                            className="text-red-400 hover:text-red-600 p-2"
                                         >
-                                            <Minus className="h-4 w-4" />
-                                        </button>
-                                        <span className="w-8 text-center font-medium">{item.quantity}</span>
-                                        <button
-                                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                            className="p-1 rounded-full hover:bg-gray-100 text-gray-500"
-                                        >
-                                            <Plus className="h-4 w-4" />
+                                            <Trash2 className="h-5 w-5" />
                                         </button>
                                     </div>
-
-                                    <button
-                                        onClick={() => removeFromCart(item.id)}
-                                        className="text-red-400 hover:text-red-600 p-2"
-                                    >
-                                        <Trash2 className="h-5 w-5" />
-                                    </button>
                                 </div>
                             ))}
                         </div>

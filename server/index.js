@@ -7,8 +7,23 @@ const app = express();
 const PORT = 5000;
 
 // Middleware
-app.use(cors());
+// Log all requests (Moved to top)
+app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    next();
+});
+
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+}));
 app.use(express.json());
+
+// Health Check
+app.get('/', (req, res) => {
+    res.status(200).send('API is running');
+});
 
 // Connect to Firebase
 const { db } = require('./config/firebase');
@@ -38,10 +53,10 @@ const seedDatabase = async () => {
         if (userSnap.empty) {
             console.log('Seeding default admin...');
             await db.collection('users').add({
-                username: "admin",
-                password: "adminpassword",
+                username: "dovoc",
+                password: "dovoc@123",
                 role: "super_admin",
-                name: "System Admin",
+                name: "Dovoc Admin",
                 email: "admin@dovoc.com",
                 createdAt: new Date().toISOString()
             });
@@ -106,6 +121,13 @@ const seedDatabase = async () => {
 if (db) {
     // seedDatabase(); // logic exists but commented out
 }
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+    console.error("Unhandled Error:", err);
+    res.status(500).json({ success: false, message: "Internal Server Error", error: err.message });
+});
+
 
 // Export for Vercel
 module.exports = app;

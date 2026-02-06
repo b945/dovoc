@@ -89,5 +89,47 @@
     "action": "DELETE_PRODUCT",
     "user": "Admin",
     "details": "Deleted product ID: 3"
+  },
+  {
+    "id": 1770369947563,
+    "timestamp": "2026-02-06T09:25:47.563Z",
+    "action": "LOGIN",
+    "user": "admin",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770370200471,
+    "timestamp": "2026-02-06T09:30:00.471Z",
+    "action": "LOGIN",
+    "user": "admin",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770370831471,
+    "timestamp": "2026-02-06T09:40:31.471Z",
+    "action": "LOGIN",
+    "user": "admin",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770371017756,
+    "timestamp": "2026-02-06T09:43:37.756Z",
+    "action": "LOGIN",
+    "user": "admin",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770371275118,
+    "timestamp": "2026-02-06T09:47:55.118Z",
+    "action": "LOGIN",
+    "user": "dovoc",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770402136751,
+    "timestamp": "2026-02-06T18:22:16.751Z",
+    "action": "LOGIN",
+    "user": "dovoc",
+    "details": "Admin logged in successfully"
   }
 ]

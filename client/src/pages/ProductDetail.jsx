@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Star, Heart, Share2, ShoppingBag, Truck, ShieldCheck, Leaf } from 'lucide-react';
+import { ArrowLeft, Star, Heart, Share2, ShoppingCart, Truck, ShieldCheck, Leaf } from 'lucide-react';
 import { products } from '../data/products';
 import { useCart } from '../context/CartContext';
 import { useNotification } from '../context/NotificationContext';
@@ -77,7 +77,7 @@ const ProductDetail = () => {
 
                 <div className="bg-white rounded-2xl shadow-sm overflow-hidden grid grid-cols-1 md:grid-cols-2 gap-0">
                     {/* Image Section */}
-                    <div className="bg-gray-50 p-8 flex items-center justify-center relative">
+                    <div className="bg-gray-50 p-6 md:p-8 flex items-center justify-center relative">
                         <img
                             src={product.image}
                             alt={product.name}
@@ -91,7 +91,7 @@ const ProductDetail = () => {
                     </div>
 
                     {/* Details Section */}
-                    <div className="p-8 md:p-12">
+                    <div className="p-6 md:p-12">
                         <div className="flex justify-between items-start mb-4">
                             <div>
                                 <h1 className="text-3xl font-bold text-dovoc-dark mb-2">{product.name}</h1>
@@ -158,7 +158,7 @@ const ProductDetail = () => {
                                 onClick={handleAddToCart}
                                 className="flex-1 bg-dovoc-dark text-white font-bold py-3 px-6 rounded-lg hover:bg-dovoc-green transition-colors flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl"
                             >
-                                <ShoppingBag className="h-5 w-5" />
+                                <ShoppingCart className="h-5 w-5" />
                                 <span>Add to Cart</span>
                             </button>
                         </div>

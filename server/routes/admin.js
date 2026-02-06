@@ -3,17 +3,22 @@ const router = express.Router();
 const { db } = require('../config/firebase');
 
 router.post('/login', async (req, res) => {
+
+    console.log("Processing /login request. Body:", JSON.stringify(req.body));
     const { username, password } = req.body;
 
     if (!db) {
+        console.error("Database not connected!");
         return res.status(500).json({ success: false, message: "Database not connected" });
     }
 
     try {
+        console.log("Querying users collection for:", username);
         const snapshot = await db.collection('users')
             .where('username', '==', username)
             .where('password', '==', password) // In production, hash check!
             .get();
+        console.log("Query complete. Empty?", snapshot.empty);
 
         if (!snapshot.empty) {
             const doc = snapshot.docs[0];

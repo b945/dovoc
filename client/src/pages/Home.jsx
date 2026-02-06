@@ -61,7 +61,7 @@ const Home = () => {
                         <span className="inline-block bg-dovoc-green px-3 py-1 text-xs font-bold uppercase tracking-widest mb-4 rounded-full">
                             New Collection
                         </span>
-                        <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight font-serif">
+                        <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold mb-6 leading-tight font-serif">
                             Pure. Organic. <br />
                             <span className="text-dovoc-light">Handcrafted.</span>
                         </h1>
@@ -111,7 +111,7 @@ const Home = () => {
                     </Link>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
                     {loading ? (
                         <div className="text-center col-span-3 text-gray-500">Loading specific content...</div>
                     ) : products.length === 0 ? (
@@ -163,7 +163,7 @@ const Home = () => {
             <section className="bg-dovoc-green/10 py-20">
                 <div className="max-w-6xl mx-auto px-4">
                     <h2 className="text-3xl font-bold text-dovoc-dark mb-12 text-center">What Our Customers Say</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
                         {featuredReviews.length > 0 ? (
                             featuredReviews.map((review, index) => (
                                 <motion.div

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { ShoppingBag, Menu, X, Search, User, Leaf, ShieldCheck } from 'lucide-react';
+import { ShoppingCart, Menu, X, Search, Leaf, LayoutDashboard } from 'lucide-react';
 
 import { useCart } from '../context/CartContext';
 
@@ -58,46 +58,45 @@ const Navbar = () => {
                     </div>
 
                     {/* Icons */}
-                    <div className="hidden md:flex items-center space-x-6 text-dovoc-brown relative">
-                        {isSearchOpen ? (
-                            <form onSubmit={handleSearch} className="absolute right-full mr-2 flex items-center bg-white rounded-full border border-gray-300 px-3 py-1 shadow-sm">
-                                <input
-                                    autoFocus
-                                    type="text"
-                                    className="outline-none text-sm w-32 md:w-48 bg-transparent"
-                                    placeholder="Search..."
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    onBlur={() => !searchTerm && setIsSearchOpen(false)}
-                                />
-                                <button type="button" onClick={() => setIsSearchOpen(false)} className="text-gray-400 hover:text-red-500 ml-1">
-                                    <X className="h-3 w-3" />
-                                </button>
-                            </form>
-                        ) : null}
+                    <div className="flex items-center space-x-4 md:space-x-6 text-dovoc-brown relative">
+                        {/* Search Desktop Only */}
+                        <div className="hidden md:block relative">
+                            {isSearchOpen ? (
+                                <form onSubmit={handleSearch} className="absolute right-full mr-2 flex items-center bg-white rounded-full border border-gray-300 px-3 py-1 shadow-sm">
+                                    <input
+                                        autoFocus
+                                        type="text"
+                                        className="outline-none text-sm w-32 md:w-48 bg-transparent"
+                                        placeholder="Search..."
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        onBlur={() => !searchTerm && setIsSearchOpen(false)}
+                                    />
+                                    <button type="button" onClick={() => setIsSearchOpen(false)} className="text-gray-400 hover:text-red-500 ml-1">
+                                        <X className="h-3 w-3" />
+                                    </button>
+                                </form>
+                            ) : null}
+                        </div>
 
-                        <button onClick={() => isSearchOpen ? handleSearch({ preventDefault: () => { } }) : setIsSearchOpen(true)} className="hover:text-dovoc-green transition-colors">
+                        <button onClick={() => isSearchOpen ? handleSearch({ preventDefault: () => { } }) : setIsSearchOpen(true)} className="hidden md:block hover:text-dovoc-green transition-colors">
                             <Search className="h-6 w-6" />
                         </button>
-                        <button className="hover:text-dovoc-green transition-colors">
-                            <User className="h-6 w-6" />
-                        </button>
+
                         <Link to="/cart" className="relative hover:text-dovoc-green transition-colors">
-                            <ShoppingBag className="h-6 w-6" />
+                            <ShoppingCart className="h-6 w-6" />
                             {cartCount > 0 && (
                                 <span className="absolute -top-1 -right-1 bg-dovoc-green text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
                                     {cartCount}
                                 </span>
                             )}
                         </Link>
-                        <Link to="/admin" className="hover:text-dovoc-green transition-colors" title="Admin Panel">
-                            <ShieldCheck className="h-5 w-5" />
+                        <Link to="/admin" className="hidden md:block hover:text-dovoc-green transition-colors" title="Admin Panel">
+                            <LayoutDashboard className="h-5 w-5" />
                         </Link>
-                    </div>
 
-                    {/* Mobile Menu Button */}
-                    <div className="md:hidden flex items-center">
-                        <button onClick={toggleMenu} className="text-dovoc-brown">
+                        {/* Mobile Menu Button */}
+                        <button onClick={toggleMenu} className="md:hidden text-dovoc-brown ml-2">
                             {isOpen ? <X className="h-7 w-7" /> : <Menu className="h-7 w-7" />}
                         </button>
                     </div>
@@ -118,6 +117,14 @@ const Navbar = () => {
                                 {link.name}
                             </Link>
                         ))}
+                        <div className="border-t border-gray-200 mt-4 pt-4 flex space-x-6 px-3">
+                            <Link to="/admin" onClick={() => setIsOpen(false)} className="flex items-center text-dovoc-brown">
+                                <LayoutDashboard className="h-5 w-5 mr-2" /> Admin
+                            </Link>
+                            <button className="flex items-center text-dovoc-brown">
+                                <Search className="h-5 w-5 mr-2" /> Search
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

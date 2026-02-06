@@ -11,11 +11,15 @@ const AdminLogin = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('${import.meta.env.VITE_API_URL}/api/admin/login', {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
             });
+
+            console.log("Response status:", response.status, response.statusText);
+            const textHTML = await response.clone().text();
+            console.log("Raw response body:", textHTML);
 
             const data = await response.json();
 
@@ -28,7 +32,8 @@ const AdminLogin = () => {
                 setError(data.message);
             }
         } catch (err) {
-            setError("Login failed. Check server.");
+            console.error("Login error:", err);
+            setError(`Login failed: ${err.message || "Check console/server"}`);
         }
     };
 
