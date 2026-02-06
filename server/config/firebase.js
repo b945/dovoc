@@ -32,7 +32,7 @@ const initFirebase = () => {
     try {
         admin.initializeApp({
             credential: admin.credential.cert(serviceAccount),
-            storageBucket: "dovoc-50f8d.firebasestorage.app"
+            storageBucket: "dovoc-a235d.firebasestorage.app"
         });
         console.log("✅ Firebase Admin Initialized");
         return admin.firestore();
