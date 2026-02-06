@@ -22,7 +22,12 @@ app.use(express.json());
 
 // Health Check
 app.get('/', (req, res) => {
-    res.status(200).send('API is running');
+    const status = db ? 'Connected' : 'Disconnected';
+    res.status(200).json({
+        message: 'API is running',
+        dbStatus: status,
+        timestamp: new Date().toISOString()
+    });
 });
 
 // Connect to Firebase
