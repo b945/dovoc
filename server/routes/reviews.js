@@ -64,13 +64,14 @@ router.get('/all', async (req, res) => {
         // For dev velocity, I'll allow fail/catch or just simple get if problematic.
         // But let's try get() then sort in JS for safety.
         // const snapshot = await db.collection('reviews').get();
-        const reviews = snapshot.docs.map(doc => doc.data());
+        // const snapshot = await db.collection('reviews').get();
+        const reviews = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
         res.json(reviews);
     } catch (err) {
         // Retry without order
         try {
             const snapshot = await db.collection('reviews').get();
-            const reviews = snapshot.docs.map(doc => doc.data());
+            const reviews = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
             res.json(reviews);
         } catch (e) {
             console.error(e);
@@ -82,23 +83,32 @@ router.get('/all', async (req, res) => {
 // POST / - Create a new review
 router.post('/', async (req, res) => {
     if (!checkDb(res)) return;
-    const { productId, customerName, rating, comment } = req.body;
-    if (!productId || !customerName || !rating || !comment) {
-        return res.status(400).json({ message: "All fields are required" });
+    const { productId, customerName, rating, comment, type = 'product' } = req.body;
+
+    // Validation
+    if (!customerName || !rating || !comment) {
+        return res.status(400).json({ message: "Name, rating, and comment are required" });
+    }
+    if (type === 'product' && !productId) {
+        return res.status(400).json({ message: "Product ID is required for product reviews" });
     }
 
     try {
         const newReview = {
-            id: Date.now(),
-            productId: parseInt(productId), // Store as number to match product ID type usually
+            id: String(Date.now()), // Ensure ID is string
             customerName,
             rating: Number(rating),
             comment,
-            isFeatured: false,
-            date: new Date().toISOString()
+            isFeatured: false, // Pending approval
+            date: new Date().toISOString(),
+            type // 'product' or 'site'
         };
 
-        await db.collection('reviews').doc(String(newReview.id)).set(newReview);
+        if (type === 'product') {
+            newReview.productId = parseInt(productId);
+        }
+
+        await db.collection('reviews').doc(newReview.id).set(newReview);
         res.status(201).json(newReview);
     } catch (err) {
         console.error(err);
@@ -108,6 +118,32 @@ router.post('/', async (req, res) => {
 
 // PATCH /:id/feature - Toggle featured status (Admin)
 router.patch('/:id/feature', async (req, res) => {
+    console.log("PATCH feature called for ID:", req.params.id); // DEBUG
+    if (!checkDb(res)) return;
+    try {
+        const docRef = db.collection('reviews').doc(String(req.params.id));
+        const doc = await docRef.get();
+
+        if (!doc.exists) {
+            console.log("Review doc not found in DB for ID:", req.params.id); // DEBUG
+            return res.status(404).json({ message: "Review not found" });
+        }
+
+        const review = doc.data();
+        const newStatus = !review.isFeatured;
+        console.log("Toggling status to:", newStatus); // DEBUG
+
+        await docRef.update({ isFeatured: newStatus });
+
+        res.json({ ...review, isFeatured: newStatus });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Error updating review" });
+    }
+});
+
+// DELETE /:id - Delete a review (Admin)
+router.delete('/:id', async (req, res) => {
     if (!checkDb(res)) return;
     try {
         const docRef = db.collection('reviews').doc(String(req.params.id));
@@ -117,15 +153,11 @@ router.patch('/:id/feature', async (req, res) => {
             return res.status(404).json({ message: "Review not found" });
         }
 
-        const review = doc.data();
-        const newStatus = !review.isFeatured;
-
-        await docRef.update({ isFeatured: newStatus });
-
-        res.json({ ...review, isFeatured: newStatus });
+        await docRef.delete();
+        res.json({ message: "Review deleted successfully" });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: "Error updating review" });
+        res.status(500).json({ message: "Error deleting review" });
     }
 });
 

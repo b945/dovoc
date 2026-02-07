@@ -62,6 +62,12 @@ const sendEmail = async (to, subject, html) => {
         }
     } catch (error) {
         console.error("Error sending email:", error);
+        // Fallback: Log the link so development can continue
+        console.log("--------------- EMAIL FALLBACK ---------------");
+        console.log(`To: ${to}`);
+        console.log(`Subject: ${subject}`);
+        console.log("Body:", html);
+        console.log("----------------------------------------------");
     }
 };
 

@@ -36,7 +36,19 @@ const Shop = () => {
     const [onlyOrganic, setOnlyOrganic] = useState(false);
     const [onlyHandmade, setOnlyHandmade] = useState(false);
 
-    const categories = ["All", "Personal Care", "Bags", "Accessories"];
+    const [categories, setCategories] = useState(["All"]);
+
+    useEffect(() => {
+        // Fetch Categories
+        fetch(`${import.meta.env.VITE_API_URL || ''}/api/categories`)
+            .then(res => res.json())
+            .then(data => {
+                if (Array.isArray(data)) {
+                    setCategories(["All", ...data.map(c => c.name)]);
+                }
+            })
+            .catch(err => console.error("Error fetching categories:", err));
+    }, []);
 
     const filteredProducts = products.filter(product => {
         const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());

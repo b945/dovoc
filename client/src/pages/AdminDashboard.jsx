@@ -5,9 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import SecurityLogsView from '../components/SecurityLogsView';
 
 const AdminDashboard = () => {
-    const [activeTab, setActiveTab] = useState('orders'); // 'orders', 'products', 'reviews', 'users'
+    const [activeTab, setActiveTab] = useState('orders'); // 'orders', 'products', 'reviews', 'users', 'categories'
     const [orders, setOrders] = useState([]);
     const [products, setProducts] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [reviews, setReviews] = useState([]);
     const [users, setUsers] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
@@ -56,6 +57,18 @@ const AdminDashboard = () => {
             .then(res => res.json())
             .then(data => setUsers(data))
             .catch(err => console.error("Failed to fetch users"));
+        fetch(`${import.meta.env.VITE_API_URL || ''}/api/users`)
+            .then(res => res.json())
+            .then(data => setUsers(data))
+            .catch(err => console.error("Failed to fetch users"));
+
+        // Fetch categories
+        fetch(`${import.meta.env.VITE_API_URL || ''}/api/categories`)
+            .then(res => res.json())
+            .then(data => {
+                if (Array.isArray(data)) setCategories(data);
+            })
+            .catch(err => console.error("Failed to fetch categories"));
     };
 
     const updateStatus = async (id, status) => {
@@ -148,16 +161,68 @@ const AdminDashboard = () => {
     };
 
     const handleToggleFeature = async (review) => {
+        console.log("Toggling feature for review:", review.id, review); // DEBUG
         try {
             const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/reviews/${review.id}/feature`, {
                 method: 'PATCH'
             });
+            console.log("Toggle response status:", res.status); // DEBUG
             if (res.ok) {
                 const updated = await res.json();
-                setReviews(reviews.map(r => r.id === updated.id ? updated : r));
+                console.log("Updated review:", updated); // DEBUG
+                // Use loose equality (==) to handle string/number id differences
+                setReviews(reviews.map(r => r.id == updated.id ? updated : r));
+            } else {
+                const text = await res.text();
+                console.error("Failed to toggle feature:", text);
+                alert("Failed to approve review: " + text);
             }
         } catch (err) {
             console.error("Failed to toggle feature", err);
+            alert("Error approving review. Check console.");
+        }
+    };
+
+    const handleDeleteReview = async (id) => {
+        if (!window.confirm("Are you sure you want to delete this review?")) return;
+        try {
+            await fetch(`${import.meta.env.VITE_API_URL || ''}/api/reviews/${id}`, { method: 'DELETE' });
+            setReviews(reviews.filter(r => r.id !== id));
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const handleAddCategory = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const name = formData.get('name');
+        if (!name) return;
+
+        try {
+            const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/categories`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, id: Date.now() })
+            });
+            if (res.ok) {
+                const newCat = await res.json();
+                setCategories([...categories, newCat]);
+                e.target.reset();
+                alert("Category added!");
+            }
+        } catch (err) {
+            console.error("Failed to add category", err);
+        }
+    };
+
+    const handleDeleteCategory = async (id) => {
+        if (!window.confirm("Delete this category?")) return;
+        try {
+            await fetch(`${import.meta.env.VITE_API_URL || ''}/api/categories/${id}`, { method: 'DELETE' });
+            setCategories(categories.filter(c => c.id !== id));
+        } catch (err) {
+            console.error("Failed to delete category", err);
         }
     };
 
@@ -237,6 +302,12 @@ const AdminDashboard = () => {
                                 className={`px-3 py-2 rounded-md font-medium text-sm transition-colors ${activeTab === 'reviews' ? 'bg-dovoc-green text-white' : 'text-gray-600 hover:bg-gray-200'}`}
                             >
                                 Reviews
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('categories')}
+                                className={`px-3 py-2 rounded-md font-medium text-sm transition-colors ${activeTab === 'categories' ? 'bg-dovoc-green text-white' : 'text-gray-600 hover:bg-gray-200'}`}
+                            >
+                                Categories
                             </button>
                             {currentUser?.role === 'super_admin' && (
                                 <>
@@ -435,7 +506,11 @@ const AdminDashboard = () => {
                                         return (
                                             <tr key={review.id}>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
-                                                    {product ? product.name : `ID: ${review.productId}`}
+                                                    {review.type === 'site' ? (
+                                                        <span className="text-dovoc-green font-bold">Site Review</span>
+                                                    ) : (
+                                                        product ? product.name : `ID: ${review.productId}`
+                                                    )}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                     {review.customerName}
@@ -446,7 +521,7 @@ const AdminDashboard = () => {
                                                 <td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
                                                     {review.comment}
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm space-x-2">
                                                     <button
                                                         onClick={() => handleToggleFeature(review)}
                                                         className={`px-3 py-1 rounded-full text-xs font-bold transition-colors ${review.isFeatured
@@ -454,7 +529,14 @@ const AdminDashboard = () => {
                                                             : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
                                                             }`}
                                                     >
-                                                        {review.isFeatured ? 'Featured' : 'Feature on Home'}
+                                                        {review.isFeatured ? 'Approved' : 'Approve'}
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDeleteReview(review.id)}
+                                                        className="text-red-600 hover:text-red-900 p-1"
+                                                        title="Delete Review"
+                                                    >
+                                                        <Trash2 className="h-4 w-4" />
                                                     </button>
                                                 </td>
                                             </tr>
@@ -466,172 +548,224 @@ const AdminDashboard = () => {
                     </div>
                 )}
 
-                {activeTab === 'users' && currentUser?.role === 'super_admin' && (
-                    <div className="bg-white rounded-lg shadow overflow-hidden">
-                        <div className="px-6 py-4 border-b border-gray-200">
-                            <h2 className="text-lg font-medium text-gray-900">User Management</h2>
-                        </div>
+                {
+                    activeTab === 'users' && currentUser?.role === 'super_admin' && (
+                        <div className="bg-white rounded-lg shadow overflow-hidden">
+                            <div className="px-6 py-4 border-b border-gray-200">
+                                <h2 className="text-lg font-medium text-gray-900">User Management</h2>
+                            </div>
 
-                        {/* Add User Form */}
-                        <div className="p-6 bg-gray-50 border-b">
-                            <h3 className="text-sm font-bold mb-4 uppercase text-gray-500">Add New User</h3>
-                            <form onSubmit={handleAddUser} className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-500 mb-1">Username</label>
-                                    <input required name="username" className="w-full border rounded px-3 py-2 text-sm" />
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-500 mb-1">Password</label>
-                                    <input required name="password" type="password" className="w-full border rounded px-3 py-2 text-sm" />
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-500 mb-1">Name</label>
-                                    <input required name="name" className="w-full border rounded px-3 py-2 text-sm" />
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-500 mb-1">Role</label>
-                                    <select name="role" className="w-full border rounded px-3 py-2 text-sm">
-                                        <option value="staff">Staff</option>
-                                        <option value="manager">Manager</option>
-                                        <option value="super_admin">Super Admin</option>
-                                    </select>
-                                </div>
-                                <button type="submit" className="bg-dovoc-dark text-white py-2 px-4 rounded-md text-sm font-bold hover:bg-black transition-colors">
-                                    Create User
-                                </button>
-                            </form>
-                        </div>
+                            {/* Add User Form */}
+                            <div className="p-6 bg-gray-50 border-b">
+                                <h3 className="text-sm font-bold mb-4 uppercase text-gray-500">Add New User</h3>
+                                <form onSubmit={handleAddUser} className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-500 mb-1">Username</label>
+                                        <input required name="username" className="w-full border rounded px-3 py-2 text-sm" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-500 mb-1">Password</label>
+                                        <input required name="password" type="password" className="w-full border rounded px-3 py-2 text-sm" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-500 mb-1">Name</label>
+                                        <input required name="name" className="w-full border rounded px-3 py-2 text-sm" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-500 mb-1">Role</label>
+                                        <select name="role" className="w-full border rounded px-3 py-2 text-sm">
+                                            <option value="staff">Staff</option>
+                                            <option value="manager">Manager</option>
+                                            <option value="super_admin">Super Admin</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" className="bg-dovoc-dark text-white py-2 px-4 rounded-md text-sm font-bold hover:bg-black transition-colors">
+                                        Create User
+                                    </button>
+                                </form>
+                            </div>
 
-                        {/* Users List */}
-                        <div className="overflow-x-auto">
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gray-50">
-                                    <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Username</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
-                                    {users.map(user => (
-                                        <tr key={user.id}>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{user.name}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.username}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                            {/* Users List */}
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full divide-y divide-gray-200">
+                                    <thead className="bg-gray-50">
+                                        <tr>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Username</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="bg-white divide-y divide-gray-200">
+                                        {users.map(user => (
+                                            <tr key={user.id}>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{user.name}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.username}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
                                                     ${user.role === 'super_admin' ? 'bg-purple-100 text-purple-800' :
-                                                        user.role === 'manager' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}`}>
-                                                    {user.role}
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                {user.username !== 'admin' && ( // Prevent deleting main admin visual safeguard
-                                                    <button onClick={() => handleDeleteUser(user.id)} className="text-red-600 hover:text-red-900">
+                                                            user.role === 'manager' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}`}>
+                                                        {user.role}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                    {user.username !== 'admin' && ( // Prevent deleting main admin visual safeguard
+                                                        <button onClick={() => handleDeleteUser(user.id)} className="text-red-600 hover:text-red-900">
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </button>
+                                                    )}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    )
+                }
+
+                {
+                    activeTab === 'security' && currentUser?.role === 'super_admin' && (
+                        <div className="bg-white rounded-lg shadow overflow-hidden">
+                            <div className="px-6 py-4 border-b border-gray-200">
+                                <h2 className="text-lg font-medium text-gray-900">Security Logs</h2>
+                            </div>
+                            <SecurityLogsView />
+                        </div>
+                    )
+                }
+
+                {
+                    activeTab === 'notifications' && (
+                        <div className="bg-white rounded-lg shadow overflow-hidden">
+                            <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                                <h2 className="text-lg font-medium text-gray-900">System Notifications</h2>
+                                <button className="text-sm text-dovoc-green hover:underline">Mark all as read</button>
+                            </div>
+                            <div className="p-6">
+                                <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-4">
+                                    <p className="text-sm text-blue-700">
+                                        <span className="font-bold">System:</span> Security logging active. All admin actions are being recorded.
+                                    </p>
+                                </div>
+                                <p className="text-gray-500 text-sm text-center py-8">No new notifications.</p>
+                            </div>
+                        </div>
+                    )
+                }
+
+                {
+                    activeTab === 'newsletter' && (
+                        <div className="bg-white rounded-lg shadow overflow-hidden">
+                            <div className="px-6 py-4 border-b border-gray-200">
+                                <h2 className="text-lg font-medium text-gray-900">Newsletter Broadcast</h2>
+                                <p className="text-sm text-gray-500">Send updates or discount codes to all subscribers.</p>
+                            </div>
+                            <div className="p-6 max-w-2xl">
+                                <form onSubmit={async (e) => {
+                                    e.preventDefault();
+                                    if (!window.confirm("Send this email to ALL subscribers?")) return;
+
+                                    const formData = new FormData(e.target);
+                                    const data = Object.fromEntries(formData.entries());
+                                    const btn = e.target.querySelector('button');
+
+                                    try {
+                                        btn.disabled = true;
+                                        btn.textContent = "Sending...";
+
+                                        const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/newsletter/broadcast`, {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify(data)
+                                        });
+
+                                        const result = await res.json();
+                                        if (res.ok) {
+                                            alert(result.message);
+                                            e.target.reset();
+                                        } else {
+                                            alert(result.message || "Failed to send");
+                                        }
+                                    } catch (err) {
+                                        console.error(err);
+                                        alert("Error sending broadcast");
+                                    } finally {
+                                        btn.disabled = false;
+                                        btn.textContent = "Send Broadcast";
+                                    }
+                                }} className="space-y-6">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Subject Line</label>
+                                        <input required name="subject" type="text" className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-dovoc-green focus:border-dovoc-green" placeholder="e.g., Summer Sale Starts Now!" />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Message Content</label>
+                                        <textarea required name="message" rows="6" className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-dovoc-green focus:border-dovoc-green" placeholder="Write your message here..."></textarea>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Discount Code (Optional)</label>
+                                        <input name="discountCode" type="text" className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-dovoc-green focus:border-dovoc-green font-mono uppercase" placeholder="SAVE20" />
+                                    </div>
+
+                                    <div className="pt-4">
+                                        <button type="submit" className="w-full bg-dovoc-dark text-white font-bold py-3 px-6 rounded-md hover:bg-dovoc-green transition-colors flex items-center justify-center">
+                                            <Send className="h-5 w-5 mr-2" /> Send Broadcast
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    )
+                }
+
+                {
+                    activeTab === 'categories' && (
+                        <div className="bg-white rounded-lg shadow overflow-hidden">
+                            <div className="px-6 py-4 border-b border-gray-200">
+                                <h2 className="text-lg font-medium text-gray-900">Category Management</h2>
+                            </div>
+                            <div className="p-6 bg-gray-50 border-b">
+                                <h3 className="text-sm font-bold mb-4 uppercase text-gray-500">Add New Category</h3>
+                                <form onSubmit={handleAddCategory} className="flex gap-4 items-end">
+                                    <div className="flex-1">
+                                        <label className="block text-xs font-bold text-gray-500 mb-1">Category Name</label>
+                                        <input required name="name" className="w-full border rounded px-3 py-2 text-sm" placeholder="e.g. Skin Care" />
+                                    </div>
+                                    <button type="submit" className="bg-dovoc-dark text-white py-2 px-4 rounded-md text-sm font-bold hover:bg-black transition-colors">
+                                        Add Category
+                                    </button>
+                                </form>
+                            </div>
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full divide-y divide-gray-200">
+                                    <thead className="bg-gray-50">
+                                        <tr>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="bg-white divide-y divide-gray-200">
+                                        {categories.map(cat => (
+                                            <tr key={cat.id}>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{cat.name}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                    <button onClick={() => handleDeleteCategory(cat.id)} className="text-red-600 hover:text-red-900">
                                                         <Trash2 className="h-4 w-4" />
                                                     </button>
-                                                )}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                )}
-
-                {activeTab === 'security' && currentUser?.role === 'super_admin' && (
-                    <div className="bg-white rounded-lg shadow overflow-hidden">
-                        <div className="px-6 py-4 border-b border-gray-200">
-                            <h2 className="text-lg font-medium text-gray-900">Security Logs</h2>
-                        </div>
-                        <SecurityLogsView />
-                    </div>
-                )}
-
-                {activeTab === 'notifications' && (
-                    <div className="bg-white rounded-lg shadow overflow-hidden">
-                        <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                            <h2 className="text-lg font-medium text-gray-900">System Notifications</h2>
-                            <button className="text-sm text-dovoc-green hover:underline">Mark all as read</button>
-                        </div>
-                        <div className="p-6">
-                            <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-4">
-                                <p className="text-sm text-blue-700">
-                                    <span className="font-bold">System:</span> Security logging active. All admin actions are being recorded.
-                                </p>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
                             </div>
-                            <p className="text-gray-500 text-sm text-center py-8">No new notifications.</p>
                         </div>
-                    </div>
-                )}
+                    )
+                }
 
-                {activeTab === 'newsletter' && (
-                    <div className="bg-white rounded-lg shadow overflow-hidden">
-                        <div className="px-6 py-4 border-b border-gray-200">
-                            <h2 className="text-lg font-medium text-gray-900">Newsletter Broadcast</h2>
-                            <p className="text-sm text-gray-500">Send updates or discount codes to all subscribers.</p>
-                        </div>
-                        <div className="p-6 max-w-2xl">
-                            <form onSubmit={async (e) => {
-                                e.preventDefault();
-                                if (!window.confirm("Send this email to ALL subscribers?")) return;
-
-                                const formData = new FormData(e.target);
-                                const data = Object.fromEntries(formData.entries());
-                                const btn = e.target.querySelector('button');
-
-                                try {
-                                    btn.disabled = true;
-                                    btn.textContent = "Sending...";
-
-                                    const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/newsletter/broadcast`, {
-                                        method: 'POST',
-                                        headers: { 'Content-Type': 'application/json' },
-                                        body: JSON.stringify(data)
-                                    });
-
-                                    const result = await res.json();
-                                    if (res.ok) {
-                                        alert(result.message);
-                                        e.target.reset();
-                                    } else {
-                                        alert(result.message || "Failed to send");
-                                    }
-                                } catch (err) {
-                                    console.error(err);
-                                    alert("Error sending broadcast");
-                                } finally {
-                                    btn.disabled = false;
-                                    btn.textContent = "Send Broadcast";
-                                }
-                            }} className="space-y-6">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Subject Line</label>
-                                    <input required name="subject" type="text" className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-dovoc-green focus:border-dovoc-green" placeholder="e.g., Summer Sale Starts Now!" />
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Message Content</label>
-                                    <textarea required name="message" rows="6" className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-dovoc-green focus:border-dovoc-green" placeholder="Write your message here..."></textarea>
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Discount Code (Optional)</label>
-                                    <input name="discountCode" type="text" className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-dovoc-green focus:border-dovoc-green font-mono uppercase" placeholder="SAVE20" />
-                                </div>
-
-                                <div className="pt-4">
-                                    <button type="submit" className="w-full bg-dovoc-dark text-white font-bold py-3 px-6 rounded-md hover:bg-dovoc-green transition-colors flex items-center justify-center">
-                                        <Send className="h-5 w-5 mr-2" /> Send Broadcast
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                )}
-
-            </main>
+            </main >
 
             {/* Order Details Modal */}
             < AnimatePresence >
@@ -767,11 +901,10 @@ const AdminDashboard = () => {
                                         </div>
                                         <div>
                                             <label className="block text-xs font-bold text-gray-500 mb-1">Category</label>
-                                            <select name="category" defaultValue={editingProduct?.category || "Personal Care"} className="w-full border rounded px-3 py-2 text-sm">
-                                                <option>Personal Care</option>
-                                                <option>Bags</option>
-                                                <option>Accessories</option>
-                                                <option>Home</option>
+                                            <select name="category" defaultValue={editingProduct?.category || (categories.length > 0 ? categories[0].name : "")} className="w-full border rounded px-3 py-2 text-sm">
+                                                {categories.map(cat => (
+                                                    <option key={cat.id} value={cat.name}>{cat.name}</option>
+                                                ))}
                                             </select>
                                         </div>
                                     </div>

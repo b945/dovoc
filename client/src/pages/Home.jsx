@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { ArrowRight, Star, Leaf, Heart, Sun, Truck } from 'lucide-react';
 import { motion } from 'framer-motion';
 import heroBg from '../assets/hero-bg.png';
@@ -8,7 +9,19 @@ import brushImg from '../assets/product-toothbrush.png';
 import bagImg from '../assets/product-bag.png';
 
 const Home = () => {
+    const { user } = useAuth();
     const [featuredReviews, setFeaturedReviews] = useState([]);
+    const [newReview, setNewReview] = useState({
+        customerName: user ? user.name : '',
+        rating: 5,
+        comment: ''
+    });
+
+    useEffect(() => {
+        if (user) {
+            setNewReview(prev => ({ ...prev, customerName: user.name }));
+        }
+    }, [user]);
 
     useEffect(() => {
         // Fetch featured reviews
@@ -194,6 +207,80 @@ const Home = () => {
                         ) : (
                             <div className="col-span-3 text-center text-gray-500 italic">
                                 Check back soon for our customer stories!
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Write a Review Section */}
+                    <div className="mt-16 max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-sm md:p-10">
+                        <h3 className="text-2xl font-bold text-dovoc-dark mb-2 text-center">Share Your Experience</h3>
+                        <p className="text-gray-500 text-center mb-8">We'd love to hear what you think about Dovoc!</p>
+
+                        {user ? (
+                            <form onSubmit={async (e) => {
+                                e.preventDefault();
+                                try {
+                                    const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/reviews`, {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ ...newReview, type: 'site' })
+                                    });
+                                    if (res.ok) {
+                                        alert("Thank you! Your review has been submitted for approval.");
+                                        setNewReview({ customerName: user.name, rating: 5, comment: '' });
+                                    } else {
+                                        alert("Failed to submit review.");
+                                    }
+                                } catch (err) {
+                                    console.error(err);
+                                    alert("Error submitting review.");
+                                }
+                            }} className="space-y-4">
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 mb-1">Your Name</label>
+                                    <input
+                                        required
+                                        readOnly
+                                        value={newReview.customerName}
+                                        className="w-full border rounded px-3 py-2 text-sm bg-gray-100 text-gray-500 cursor-not-allowed"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 mb-1">Rating</label>
+                                    <div className="flex space-x-2 mb-2">
+                                        {[1, 2, 3, 4, 5].map((star) => (
+                                            <button
+                                                key={star}
+                                                type="button"
+                                                onClick={() => setNewReview({ ...newReview, rating: star })}
+                                                className={`focus:outline-none transition-transform hover:scale-110 ${newReview.rating >= star ? 'text-yellow-400' : 'text-gray-300'}`}
+                                            >
+                                                <Star className="h-8 w-8 fill-current" />
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 mb-1">Comment</label>
+                                    <textarea
+                                        required
+                                        rows="3"
+                                        value={newReview.comment}
+                                        onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
+                                        className="w-full border rounded px-3 py-2 text-sm focus:ring-1 focus:ring-dovoc-green outline-none"
+                                        placeholder="Tell us about your shopping experience..."
+                                    ></textarea>
+                                </div>
+                                <button type="submit" className="w-full bg-dovoc-dark text-white py-3 rounded-lg font-bold hover:bg-black transition-colors">
+                                    Submit Review
+                                </button>
+                            </form>
+                        ) : (
+                            <div className="text-center py-6 bg-gray-50 rounded-xl">
+                                <p className="text-gray-500 mb-4">Please log in to leave a review.</p>
+                                <Link to="/login" className="inline-block bg-dovoc-green text-white px-6 py-2 rounded-lg font-bold hover:bg-dovoc-dark transition-colors">
+                                    Login to Review
+                                </Link>
                             </div>
                         )}
                     </div>
