@@ -4,16 +4,28 @@ import { ArrowLeft, Star, Heart, Share2, ShoppingCart, Truck, ShieldCheck, Leaf 
 import { products } from '../data/products';
 import { useCart } from '../context/CartContext';
 import { useNotification } from '../context/NotificationContext';
+import { useAuth } from '../context/AuthContext';
 
 const ProductDetail = () => {
     const { id } = useParams();
     const [product, setProduct] = useState(null);
     const { addToCart } = useCart();
     const { addNotification } = useNotification();
+    const { user } = useAuth();
     const [quantity, setQuantity] = useState(1);
     const [loading, setLoading] = useState(true);
     const [reviews, setReviews] = useState([]);
-    const [newReview, setNewReview] = useState({ customerName: '', rating: 5, comment: '' });
+    const [newReview, setNewReview] = useState({
+        customerName: user ? user.name : '',
+        rating: 5,
+        comment: ''
+    });
+
+    useEffect(() => {
+        if (user) {
+            setNewReview(prev => ({ ...prev, customerName: user.name }));
+        }
+    }, [user]);
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -191,48 +203,57 @@ const ProductDetail = () => {
                             </div>
 
                             {/* Review Form */}
+                            {/* Review Form - Only for Logged In Users */}
                             <div className="bg-gray-50 p-6 rounded-xl">
                                 <h3 className="font-bold text-lg text-dovoc-dark mb-4">Write a Review</h3>
-                                <form onSubmit={handleReviewSubmit} className="space-y-4">
-                                    <div>
-                                        <label className="block text-xs font-bold text-gray-500 mb-1">Your Name</label>
-                                        <input
-                                            required
-                                            value={newReview.customerName}
-                                            onChange={(e) => setNewReview({ ...newReview, customerName: e.target.value })}
-                                            className="w-full border rounded px-3 py-2 text-sm"
-                                            placeholder="John Doe"
-                                        />
+                                {user ? (
+                                    <form onSubmit={handleReviewSubmit} className="space-y-4">
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-500 mb-1">Your Name</label>
+                                            <input
+                                                required
+                                                readOnly // Name from profile
+                                                value={newReview.customerName}
+                                                className="w-full border rounded px-3 py-2 text-sm bg-gray-100 text-gray-500 cursor-not-allowed"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-500 mb-1">Rating</label>
+                                            <select
+                                                value={newReview.rating}
+                                                onChange={(e) => setNewReview({ ...newReview, rating: Number(e.target.value) })}
+                                                className="w-full border rounded px-3 py-2 text-sm"
+                                            >
+                                                <option value="5">5 - Excellent</option>
+                                                <option value="4">4 - Good</option>
+                                                <option value="3">3 - Average</option>
+                                                <option value="2">2 - Poor</option>
+                                                <option value="1">1 - Terrible</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-500 mb-1">Comment</label>
+                                            <textarea
+                                                required
+                                                rows="3"
+                                                value={newReview.comment}
+                                                onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
+                                                className="w-full border rounded px-3 py-2 text-sm"
+                                                placeholder="Share your experience..."
+                                            ></textarea>
+                                        </div>
+                                        <button type="submit" className="w-full bg-dovoc-dark text-white py-2 rounded-lg font-bold hover:bg-black transition-colors">
+                                            Submit Review
+                                        </button>
+                                    </form>
+                                ) : (
+                                    <div className="text-center py-6">
+                                        <p className="text-gray-500 mb-4">Please log in to write a review.</p>
+                                        <Link to="/login" className="inline-block bg-dovoc-green text-white px-6 py-2 rounded-lg font-bold hover:bg-dovoc-dark transition-colors">
+                                            Login to Review
+                                        </Link>
                                     </div>
-                                    <div>
-                                        <label className="block text-xs font-bold text-gray-500 mb-1">Rating</label>
-                                        <select
-                                            value={newReview.rating}
-                                            onChange={(e) => setNewReview({ ...newReview, rating: Number(e.target.value) })}
-                                            className="w-full border rounded px-3 py-2 text-sm"
-                                        >
-                                            <option value="5">5 - Excellent</option>
-                                            <option value="4">4 - Good</option>
-                                            <option value="3">3 - Average</option>
-                                            <option value="2">2 - Poor</option>
-                                            <option value="1">1 - Terrible</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label className="block text-xs font-bold text-gray-500 mb-1">Comment</label>
-                                        <textarea
-                                            required
-                                            rows="3"
-                                            value={newReview.comment}
-                                            onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
-                                            className="w-full border rounded px-3 py-2 text-sm"
-                                            placeholder="Share your experience..."
-                                        ></textarea>
-                                    </div>
-                                    <button type="submit" className="w-full bg-dovoc-dark text-white py-2 rounded-lg font-bold hover:bg-black transition-colors">
-                                        Submit Review
-                                    </button>
-                                </form>
+                                )}
                             </div>
                         </div>
                     </div>

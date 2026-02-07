@@ -15,14 +15,19 @@ app.use((req, res, next) => {
 
 app.use(cors({
     origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 app.use(express.json());
 
 // Health Check
 app.get('/', (req, res) => {
-    res.status(200).send('API is running');
+    const status = db ? 'Connected' : 'Disconnected';
+    res.status(200).json({
+        message: 'API is running',
+        dbStatus: status,
+        timestamp: new Date().toISOString()
+    });
 });
 
 // Connect to Firebase
@@ -44,6 +49,9 @@ app.use('/api/newsletter', require('./routes/newsletter'));
 app.use('/api/reviews', require('./routes/reviews'));
 app.use('/api/upload', require('./routes/upload'));
 app.use('/api/contact', require('./routes/contact'));
+app.use('/api/categories', require('./routes/categories'));
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/cart', require('./routes/cart'));
 
 // Seeding Logic
 const seedDatabase = async () => {
@@ -112,15 +120,37 @@ const seedDatabase = async () => {
             console.log('Initial products created.');
         } 
         */
+        // Seed Categories
+        const catSnap = await db.collection('categories').limit(1).get();
+        if (catSnap.empty) {
+            console.log('Seeding default categories...');
+            const defaultCategories = [
+                { id: 'cat_1', name: "Personal Care" },
+                { id: 'cat_2', name: "Bags" },
+                { id: 'cat_3', name: "Accessories" },
+                { id: 'cat_4', name: "Home" }
+            ];
+
+            const batch = db.batch();
+            defaultCategories.forEach(cat => {
+                const docRef = db.collection('categories').doc(cat.id);
+                batch.set(docRef, cat);
+            });
+            await batch.commit();
+            console.log('Default categories seeded.');
+        }
+
     } catch (e) {
         console.error("Seeding error:", e);
     }
 };
 
-// Check DB and Seed on startup
-if (db) {
-    // seedDatabase(); // logic exists but commented out
-}
+// Setup Route (One-time use)
+app.get('/api/setup', async (req, res) => {
+    if (!db) return res.status(500).json({ message: "DB unconnected" });
+    await seedDatabase();
+    res.json({ message: "Setup complete. Admin user created if missing." });
+});
 
 // Global Error Handler
 app.use((err, req, res, next) => {

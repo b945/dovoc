@@ -131,5 +131,124 @@
     "action": "LOGIN",
     "user": "dovoc",
     "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770409980104,
+    "timestamp": "2026-02-06T20:33:00.104Z",
+    "action": "LOGIN",
+    "user": "dovoc",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770455596267,
+    "timestamp": "2026-02-07T09:13:16.267Z",
+    "action": "REGISTER_CUSTOMER",
+    "user": "System",
+    "details": "New customer registered: amannasar39@gmail.com"
+  },
+  {
+    "id": 1770455667392,
+    "timestamp": "2026-02-07T09:14:27.392Z",
+    "action": "LOGIN",
+    "user": "dovoc",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770456199682,
+    "timestamp": "2026-02-07T09:23:19.682Z",
+    "action": "FORGOT_PASSWORD_REQUEST",
+    "user": "System",
+    "details": "Reset requested for amannasar39@gmail.com"
+  },
+  {
+    "id": 1770456350483,
+    "timestamp": "2026-02-07T09:25:50.483Z",
+    "action": "REGISTER_CUSTOMER",
+    "user": "System",
+    "details": "New customer registered: test_reset@example.com"
+  },
+  {
+    "id": 1770456355299,
+    "timestamp": "2026-02-07T09:25:55.299Z",
+    "action": "FORGOT_PASSWORD_REQUEST",
+    "user": "System",
+    "details": "Reset requested for test_reset@example.com"
+  },
+  {
+    "id": 1770456657054,
+    "timestamp": "2026-02-07T09:30:57.054Z",
+    "action": "FORGOT_PASSWORD_REQUEST",
+    "user": "System",
+    "details": "Reset requested for amannasar39@gmail.com"
+  },
+  {
+    "id": 1770456777648,
+    "timestamp": "2026-02-07T09:32:57.648Z",
+    "action": "LOGIN",
+    "user": "dovoc",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770457077550,
+    "timestamp": "2026-02-07T09:37:57.550Z",
+    "action": "LOGIN_CUSTOMER",
+    "user": "System",
+    "details": "Customer logged in: amannasar39@gmail.com"
+  },
+  {
+    "id": 1770457134233,
+    "timestamp": "2026-02-07T09:38:54.233Z",
+    "action": "REGISTER_CUSTOMER",
+    "user": "System",
+    "details": "New customer registered: arun123@gmail.com"
+  },
+  {
+    "id": 1770457401242,
+    "timestamp": "2026-02-07T09:43:21.242Z",
+    "action": "LOGIN",
+    "user": "dovoc",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770457831037,
+    "timestamp": "2026-02-07T09:50:31.037Z",
+    "action": "LOGIN_CUSTOMER",
+    "user": "System",
+    "details": "Customer logged in: amannasar39@gmail.com"
+  },
+  {
+    "id": 1770457867198,
+    "timestamp": "2026-02-07T09:51:07.198Z",
+    "action": "LOGIN_CUSTOMER",
+    "user": "System",
+    "details": "Customer logged in: arun123@gmail.com"
+  },
+  {
+    "id": 1770457892059,
+    "timestamp": "2026-02-07T09:51:32.059Z",
+    "action": "LOGIN_CUSTOMER",
+    "user": "System",
+    "details": "Customer logged in: amannasar39@gmail.com"
+  },
+  {
+    "id": 1770458020775,
+    "timestamp": "2026-02-07T09:53:40.775Z",
+    "action": "LOGIN",
+    "user": "dovoc",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770458298149,
+    "timestamp": "2026-02-07T09:58:18.149Z",
+    "action": "LOGIN",
+    "user": "dovoc",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770458629123,
+    "timestamp": "2026-02-07T10:03:49.123Z",
+    "action": "DELETE_USER",
+    "user": "Super Admin",
+    "details": "Deleted user ID: OeMtFT59tcTbjfnfVkeG"
   }
 ]

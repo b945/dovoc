@@ -11,6 +11,10 @@ const initFirebase = () => {
     if (process.env.FIREBASE_SERVICE_ACCOUNT) {
         try {
             serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+            // Handle newlines in private key if they are escaped
+            if (serviceAccount.private_key) {
+                serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
+            }
         } catch (e) {
             console.error("❌ Failed to parse FIREBASE_SERVICE_ACCOUNT env var");
             return null;
@@ -28,7 +32,7 @@ const initFirebase = () => {
     try {
         admin.initializeApp({
             credential: admin.credential.cert(serviceAccount),
-            storageBucket: "dovoc-50f8d.firebasestorage.app"
+            storageBucket: "dovoc-a235d.firebasestorage.app"
         });
         console.log("✅ Firebase Admin Initialized");
         return admin.firestore();

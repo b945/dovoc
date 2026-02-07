@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import qrCode from '../assets/qrcode.png';
+import qrCode from '../assets/qrcode.png.jpeg';
 import { ArrowLeft, CheckCircle } from 'lucide-react';
 
 const Checkout = () => {
@@ -139,8 +139,28 @@ const Checkout = () => {
                             <p className="text-gray-500 mb-8">Scan the QR code below using any UPI app.</p>
 
                             <div className="flex justify-center mb-8">
-                                <div className="p-4 bg-white border-2 border-dovoc-green rounded-xl shadow-inner">
-                                    <img src={qrCode} alt="Payment QR Code" className="w-64 h-64 object-contain" />
+                                <div className="p-6 bg-white border-2 border-dovoc-green rounded-xl shadow-lg">
+                                    <img
+                                        src={qrCode}
+                                        alt="Payment QR Code"
+                                        className="w-80 h-80 object-contain"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="text-center mb-8">
+                                <p className="text-gray-600 font-medium mb-2">Or pay via Phone Number:</p>
+                                <div className="flex items-center justify-center space-x-2">
+                                    <p className="text-xl font-bold text-dovoc-dark">+91 99958 62640</p>
+                                    <button
+                                        onClick={() => {
+                                            navigator.clipboard.writeText("+91 99958 62640");
+                                            alert("Phone number copied!");
+                                        }}
+                                        className="text-dovoc-green hover:text-dovoc-brown text-sm font-medium underline"
+                                    >
+                                        Copy
+                                    </button>
                                 </div>
                             </div>
 

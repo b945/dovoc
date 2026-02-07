@@ -4,11 +4,15 @@ import { ShoppingCart, Menu, X, Search, Leaf, LayoutDashboard } from 'lucide-rea
 
 import { useCart } from '../context/CartContext';
 
+import { useAuth } from '../context/AuthContext';
+import { User, LogOut } from 'lucide-react';
+
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const { cartCount } = useCart();
+    const { user, logout } = useAuth();
     const navigate = useNavigate();
 
     const toggleMenu = () => setIsOpen(!isOpen);
@@ -22,10 +26,16 @@ const Navbar = () => {
         }
     };
 
+    const handleLogout = () => {
+        logout();
+        navigate('/');
+    };
+
     const navLinks = [
         { name: 'Home', path: '/' },
+        // Only show Shop if user is logged in, else show Login/Register hints via behavior or explicit links
+        // But per request, strict restriction. We'll show Shop, but it redirects.
         { name: 'Shop', path: '/shop' },
-
         { name: 'Contact', path: '/contact' },
     ];
 
@@ -91,6 +101,28 @@ const Navbar = () => {
                                 </span>
                             )}
                         </Link>
+
+                        {user ? (
+                            <div className="relative group/user">
+                                <button className="flex items-center space-x-2 text-sm font-medium hover:text-dovoc-green">
+                                    <User className="h-5 w-5" />
+                                    <span className="hidden lg:block">{user.name.split(' ')[0]}</span>
+                                </button>
+                                {/* Dropdown */}
+                                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 opacity-0 invisible group-hover/user:opacity-100 group-hover/user:visible transition-all duration-200">
+                                    <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        Logout
+                                    </button>
+                                </div>
+                            </div>
+                        ) : (
+                            <Link to="/login" className="flex items-center space-x-1 text-sm font-bold border border-dovoc-green text-dovoc-green px-3 py-1 rounded-full hover:bg-dovoc-green hover:text-white transition-colors">
+                                <User className="h-4 w-4" />
+                                <span>Login</span>
+                            </Link>
+                        )}
+
+
                         <Link to="/admin" className="hidden md:block hover:text-dovoc-green transition-colors" title="Admin Panel">
                             <LayoutDashboard className="h-5 w-5" />
                         </Link>
@@ -117,13 +149,20 @@ const Navbar = () => {
                                 {link.name}
                             </Link>
                         ))}
-                        <div className="border-t border-gray-200 mt-4 pt-4 flex space-x-6 px-3">
+                        <div className="border-t border-gray-200 mt-4 pt-4 flex flex-col space-y-3 px-3">
+                            {user ? (
+                                <button onClick={() => { handleLogout(); setIsOpen(false); }} className="flex items-center text-red-600 font-medium">
+                                    <LogOut className="h-5 w-5 mr-2" /> Logout ({user.name})
+                                </button>
+                            ) : (
+                                <Link to="/login" onClick={() => setIsOpen(false)} className="flex items-center text-dovoc-green font-bold">
+                                    <User className="h-5 w-5 mr-2" /> Login / Sign Up
+                                </Link>
+                            )}
+
                             <Link to="/admin" onClick={() => setIsOpen(false)} className="flex items-center text-dovoc-brown">
                                 <LayoutDashboard className="h-5 w-5 mr-2" /> Admin
                             </Link>
-                            <button className="flex items-center text-dovoc-brown">
-                                <Search className="h-5 w-5 mr-2" /> Search
-                            </button>
                         </div>
                     </div>
                 </div>
