@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Star, Heart, Share2, ShoppingCart, Truck, ShieldCheck, Leaf } from 'lucide-react';
-import { products } from '../data/products';
 import { useCart } from '../context/CartContext';
 import { useNotification } from '../context/NotificationContext';
 import { useAuth } from '../context/AuthContext';
@@ -20,6 +19,13 @@ const ProductDetail = () => {
         rating: 5,
         comment: ''
     });
+    const [activeImage, setActiveImage] = useState(null);
+
+    useEffect(() => {
+        if (product) {
+            setActiveImage(product.image);
+        }
+    }, [product]);
 
     useEffect(() => {
         if (user) {
@@ -89,16 +95,35 @@ const ProductDetail = () => {
 
                 <div className="bg-white rounded-2xl shadow-sm overflow-hidden grid grid-cols-1 md:grid-cols-2 gap-0">
                     {/* Image Section */}
-                    <div className="bg-gray-50 p-6 md:p-8 flex items-center justify-center relative">
+                    <div className="bg-gray-50 p-6 md:p-8 flex flex-col items-center justify-center relative">
                         <img
-                            src={product.image}
+                            src={activeImage || product.image}
                             alt={product.name}
-                            className="w-full max-w-md object-contain hover:scale-105 transition-transform duration-500"
+                            className="w-full max-w-md object-contain hover:scale-105 transition-transform duration-500 mb-6 rounded-lg mix-blend-multiply"
                         />
                         {product.organic && (
                             <span className="absolute top-6 left-6 bg-dovoc-green text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest">
                                 Organic
                             </span>
+                        )}
+
+                        {/* Image Gallery */}
+                        {product.images && product.images.length > 0 && (
+                            <div className="flex space-x-3 overflow-x-auto p-2 scrollbar-hide w-full justify-center">
+                                {/* Always show main image as first thumbnail if not already in images array? 
+                                    Let's assume images array contains all alternate views. 
+                                    We can prepend main image to the list for consistent gallery.
+                                */}
+                                {[product.image, ...product.images].filter((img, index, self) => img && self.indexOf(img) === index).map((img, idx) => (
+                                    <button
+                                        key={idx}
+                                        onClick={() => setActiveImage(img)}
+                                        className={`border-2 rounded-lg overflow-hidden h-16 w-16 flex-shrink-0 transition-all ${activeImage === img ? 'border-dovoc-green ring-2 ring-dovoc-green/20' : 'border-transparent hover:border-dovoc-brown/50'}`}
+                                    >
+                                        <img src={img} alt={`View ${idx + 1}`} className="w-full h-full object-cover" />
+                                    </button>
+                                ))}
+                            </div>
                         )}
                     </div>
 

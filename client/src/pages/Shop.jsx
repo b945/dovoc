@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { Search, Filter, Star, ShoppingCart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useCart } from '../context/CartContext';
@@ -32,7 +32,7 @@ const Shop = () => {
             })
             .catch(err => console.error("Error fetching products:", err));
     }, []);
-    const [priceRange, setPriceRange] = useState(5000);
+    const [priceRange, setPriceRange] = useState(100000);
     const [onlyOrganic, setOnlyOrganic] = useState(false);
     const [onlyHandmade, setOnlyHandmade] = useState(false);
 
@@ -114,7 +114,7 @@ const Shop = () => {
                             <input
                                 type="range"
                                 min="0"
-                                max="10000"
+                                max="100000"
                                 value={priceRange}
                                 onChange={(e) => setPriceRange(Number(e.target.value))}
                                 className="w-full accent-dovoc-green h-2 rounded-lg appearance-none cursor-pointer bg-gray-200"
@@ -177,11 +177,13 @@ const Shop = () => {
                                     className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group"
                                 >
                                     <div className="relative h-48 overflow-hidden bg-gray-100">
-                                        <img
-                                            src={product.image}
-                                            alt={product.name}
-                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                        />
+                                        <Link to={`/product/${product.id}`}>
+                                            <img
+                                                src={product.image}
+                                                alt={product.name}
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                            />
+                                        </Link>
                                         {product.organic && (
                                             <span className="absolute top-2 left-2 bg-green-100 text-green-800 text-xs font-bold px-2 py-1 rounded-full">
                                                 Organic
@@ -190,7 +192,9 @@ const Shop = () => {
                                     </div>
                                     <div className="p-4">
                                         <div className="flex justify-between items-start mb-2">
-                                            <h3 className="font-bold text-dovoc-dark line-clamp-1">{product.name}</h3>
+                                            <Link to={`/product/${product.id}`}>
+                                                <h3 className="font-bold text-dovoc-dark line-clamp-1 hover:text-dovoc-green transition-colors">{product.name}</h3>
+                                            </Link>
                                             <span className="text-dovoc-green font-bold">₹{product.price}</span>
                                         </div>
                                         <p className="text-xs text-gray-500 mb-3 line-clamp-2">{product.description}</p>

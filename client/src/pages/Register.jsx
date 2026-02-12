@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
-import { Leaf } from 'lucide-react';
+// import { Leaf } from 'lucide-react'; // Removed unused icon
 
 const Register = () => {
     const navigate = useNavigate();
@@ -41,7 +41,7 @@ const Register = () => {
         <div className="min-h-screen bg-dovoc-beige flex items-center justify-center p-4">
             <div className="bg-white p-8 rounded-xl shadow-lg max-w-md w-full">
                 <div className="text-center mb-8">
-                    <Leaf className="h-10 w-10 text-dovoc-green mx-auto mb-2" />
+                    <img src="/dovoc-logo-new.png" alt="Dovoc" className="h-16 mx-auto mb-4 object-contain" />
                     <h2 className="text-2xl font-bold text-dovoc-dark">Create Account</h2>
                     <p className="text-gray-500">Join our community of eco-conscious shoppers</p>
                 </div>

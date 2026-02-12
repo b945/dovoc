@@ -1,3 +1,9 @@
+process.on('uncaughtException', (err) => {
+    console.error('UNCAUGHT EXCEPTION:', err);
+});
+process.on('unhandledRejection', (reason, p) => {
+    console.error('UNHANDLED REJECTION:', reason);
+});
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -164,10 +170,20 @@ module.exports = app;
 
 // Only listen if running directly (not required by Vercel)
 if (require.main === module) {
-    app.listen(PORT, () => {
+    const server = app.listen(PORT, () => {
         console.log(`Server running on http://localhost:${PORT}`);
         if (!db) {
             console.log("⚠️  WARNING: Firebase DB not connected. Check serviceAccountKey.json.");
+        } else {
+            console.log("✅ DB Connected");
         }
     });
+
+    server.on('error', (e) => console.error('SERVER ERROR:', e));
+    server.on('close', () => console.log('SERVER CLOSED'));
+
+    // Keep process alive if server fails to hold event loop
+    setInterval(() => {
+        // console.log('Heartbeat...');
+    }, 60000);
 }

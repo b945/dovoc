@@ -17,8 +17,14 @@ const Contact = () => {
         };
 
         try {
-            // REPLACE 'YOUR_FORMSPREE_ID' with your actual Form ID from https://formspree.io/
-            const response = await fetch('https://formspree.io/f/YOUR_FORMSPREE_ID', {
+            const formId = import.meta.env.VITE_FORMSPREE_ID;
+            if (!formId) {
+                alert("Form configuration missing. Please set VITE_FORMSPREE_ID in your .env file.");
+                setLoading(false);
+                return;
+            }
+
+            const response = await fetch(`https://formspree.io/f/${formId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

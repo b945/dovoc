@@ -23,6 +23,44 @@ router.post('/subscribe', async (req, res) => {
             subscribedAt: new Date().toISOString()
         });
 
+        // Send Notification to Admin
+        try {
+            await axios.post('https://api.emailjs.com/api/v1.0/email/send', {
+                service_id: process.env.EMAILJS_SERVICE_ID,
+                template_id: process.env.EMAILJS_TEMPLATE_ID,
+                user_id: process.env.EMAILJS_PUBLIC_KEY,
+                accessToken: process.env.EMAILJS_PRIVATE_KEY,
+                template_params: {
+                    to_email: 'dovochandcrafts@gmail.com',
+                    subject: 'New Newsletter Subscriber 🌟',
+                    message: `A new user has just subscribed to the newsletter:\n\nEmail: ${email}\n\nDate: ${new Date().toLocaleString()}`,
+                    admin_email: 'dovochandcrafts@gmail.com'
+                }
+            });
+            console.log(`Admin notification sent for new subscriber: ${email}`);
+        } catch (emailError) {
+            console.error("Failed to send admin notification:", emailError.message);
+        }
+
+        // Send Welcome Email to Subscriber
+        try {
+            await axios.post('https://api.emailjs.com/api/v1.0/email/send', {
+                service_id: process.env.EMAILJS_SERVICE_ID,
+                template_id: process.env.EMAILJS_TEMPLATE_ID,
+                user_id: process.env.EMAILJS_PUBLIC_KEY,
+                accessToken: process.env.EMAILJS_PRIVATE_KEY,
+                template_params: {
+                    to_email: email,
+                    subject: 'Welcome to Dovoc Eco Life! 🌿',
+                    message: "Thank you for subscribing! We're thrilled to have you with us.\n\nWe'll keep you updated on our latest eco-friendly products, exclusive discounts, and when our next sale starts.\n\nStay tuned!",
+                    admin_email: 'dovochandcrafts@gmail.com'
+                }
+            });
+            console.log(`Welcome email sent to subscriber: ${email}`);
+        } catch (welcomeError) {
+            console.error("Failed to send welcome email:", welcomeError.message);
+        }
+
         res.status(201).json({ message: 'Successfully subscribed to newsletter' });
     } catch (error) {
         console.error("Error subscribing:", error);
@@ -63,9 +101,16 @@ router.post('/broadcast', async (req, res) => {
             return axios.post('https://api.emailjs.com/api/v1.0/email/send', templateParams);
         });
 
-        await Promise.allSettled(emailPromises);
+        const results = await Promise.allSettled(emailPromises);
+        const successful = results.filter(r => r.status === 'fulfilled').length;
+        const failed = results.filter(r => r.status === 'rejected');
 
-        res.json({ success: true, message: `Broadcast sent to ${subscribers.length} subscribers.` });
+        if (failed.length > 0) {
+            console.error("Some emails failed to send:");
+            failed.forEach(f => console.error(" - Reason:", f.reason.response ? f.reason.response.data : f.reason.message));
+        }
+
+        res.json({ success: true, message: `Broadcast sent: ${successful} success, ${failed.length} failed.` });
 
     } catch (error) {
         console.error("Error broadcasting:", error);

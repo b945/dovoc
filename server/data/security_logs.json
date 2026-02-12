@@ -250,5 +250,278 @@
     "action": "DELETE_USER",
     "user": "Super Admin",
     "details": "Deleted user ID: OeMtFT59tcTbjfnfVkeG"
+  },
+  {
+    "id": 1770532335186,
+    "timestamp": "2026-02-08T06:32:15.186Z",
+    "action": "LOGIN",
+    "user": "dovoc",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770533850182,
+    "timestamp": "2026-02-08T06:57:30.182Z",
+    "action": "DELETE_PRODUCT",
+    "user": "Admin",
+    "details": "Deleted product ID: 1770472972544"
+  },
+  {
+    "id": 1770533853344,
+    "timestamp": "2026-02-08T06:57:33.344Z",
+    "action": "DELETE_PRODUCT",
+    "user": "Admin",
+    "details": "Deleted product ID: 1770461276320"
+  },
+  {
+    "id": 1770533911004,
+    "timestamp": "2026-02-08T06:58:31.004Z",
+    "action": "DELETE_USER",
+    "user": "Super Admin",
+    "details": "Deleted user ID: ZTacvY6cIM14v0OgSNG5"
+  },
+  {
+    "id": 1770534180430,
+    "timestamp": "2026-02-08T07:03:00.430Z",
+    "action": "CREATE_USER",
+    "user": "Super Admin",
+    "details": "Created user: shibhu (manager)"
+  },
+  {
+    "id": 1770534702406,
+    "timestamp": "2026-02-08T07:11:42.406Z",
+    "action": "LOGIN",
+    "user": "dovoc",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770534754791,
+    "timestamp": "2026-02-08T07:12:34.791Z",
+    "action": "CREATE_PRODUCT",
+    "user": "Admin",
+    "details": "Created product: soap"
+  },
+  {
+    "id": 1770534848651,
+    "timestamp": "2026-02-08T07:14:08.651Z",
+    "action": "CREATE_USER",
+    "user": "Super Admin",
+    "details": "Created user: nazz (manager)"
+  },
+  {
+    "id": 1770534876817,
+    "timestamp": "2026-02-08T07:14:36.817Z",
+    "action": "DELETE_USER",
+    "user": "Super Admin",
+    "details": "Deleted user ID: TyOI3rBICWjSg1KvCLyd"
+  },
+  {
+    "id": 1770535003813,
+    "timestamp": "2026-02-08T07:16:43.813Z",
+    "action": "DELETE_CATEGORY",
+    "user": "Admin",
+    "details": "Deleted category ID: cat_2"
+  },
+  {
+    "id": 1770535008773,
+    "timestamp": "2026-02-08T07:16:48.773Z",
+    "action": "DELETE_CATEGORY",
+    "user": "Admin",
+    "details": "Deleted category ID: cat_4"
+  },
+  {
+    "id": 1770535012585,
+    "timestamp": "2026-02-08T07:16:52.585Z",
+    "action": "DELETE_CATEGORY",
+    "user": "Admin",
+    "details": "Deleted category ID: cat_3"
+  },
+  {
+    "id": 1770537979702,
+    "timestamp": "2026-02-08T08:06:19.702Z",
+    "action": "LOGIN",
+    "user": "dovoc",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770539606167,
+    "timestamp": "2026-02-08T08:33:26.167Z",
+    "action": "REGISTER_CUSTOMER",
+    "user": "System",
+    "details": "New customer registered: amannasar39@gmail.com"
+  },
+  {
+    "id": 1770539638413,
+    "timestamp": "2026-02-08T08:33:58.413Z",
+    "action": "LOGIN",
+    "user": "dovoc",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770539755950,
+    "timestamp": "2026-02-08T08:35:55.950Z",
+    "action": "LOGIN",
+    "user": "dovoc",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770539775733,
+    "timestamp": "2026-02-08T08:36:15.733Z",
+    "action": "CREATE_CATEGORY",
+    "user": "Admin",
+    "details": "Created category: Skincare"
+  },
+  {
+    "id": 1770539776055,
+    "timestamp": "2026-02-08T08:36:16.055Z",
+    "action": "CREATE_CATEGORY",
+    "user": "Admin",
+    "details": "Created category: Haircare"
+  },
+  {
+    "id": 1770539777288,
+    "timestamp": "2026-02-08T08:36:17.288Z",
+    "action": "CREATE_CATEGORY",
+    "user": "Admin",
+    "details": "Created category: Body Care"
+  },
+  {
+    "id": 1770539777644,
+    "timestamp": "2026-02-08T08:36:17.644Z",
+    "action": "CREATE_CATEGORY",
+    "user": "Admin",
+    "details": "Created category: Home Care"
+  },
+  {
+    "id": 1770539778850,
+    "timestamp": "2026-02-08T08:36:18.850Z",
+    "action": "CREATE_CATEGORY",
+    "user": "Admin",
+    "details": "Created category: Fragrance"
+  },
+  {
+    "id": 1770539803831,
+    "timestamp": "2026-02-08T08:36:43.831Z",
+    "action": "CREATE_PRODUCT",
+    "user": "Admin",
+    "details": "Created product: fgnfj"
+  },
+  {
+    "id": 1770539891579,
+    "timestamp": "2026-02-08T08:38:11.580Z",
+    "action": "LOGIN",
+    "user": "dovoc",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770540005784,
+    "timestamp": "2026-02-08T08:40:05.784Z",
+    "action": "CREATE_CATEGORY",
+    "user": "Admin",
+    "details": "Created category: Bags"
+  },
+  {
+    "id": 1770540006128,
+    "timestamp": "2026-02-08T08:40:06.128Z",
+    "action": "CREATE_CATEGORY",
+    "user": "Admin",
+    "details": "Created category: Accessories"
+  },
+  {
+    "id": 1770540087654,
+    "timestamp": "2026-02-08T08:41:27.654Z",
+    "action": "CREATE_PRODUCT",
+    "user": "Admin",
+    "details": "Created product: soap"
+  },
+  {
+    "id": 1770540097038,
+    "timestamp": "2026-02-08T08:41:37.038Z",
+    "action": "DELETE_PRODUCT",
+    "user": "Admin",
+    "details": "Deleted product ID: 1770534754131"
+  },
+  {
+    "id": 1770540099761,
+    "timestamp": "2026-02-08T08:41:39.761Z",
+    "action": "DELETE_PRODUCT",
+    "user": "Admin",
+    "details": "Deleted product ID: 1770539803509"
+  },
+  {
+    "id": 1770540318449,
+    "timestamp": "2026-02-08T08:45:18.449Z",
+    "action": "LOGIN",
+    "user": "dovoc",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770540648986,
+    "timestamp": "2026-02-08T08:50:48.986Z",
+    "action": "LOGIN",
+    "user": "dovoc",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770839151766,
+    "timestamp": "2026-02-11T19:45:51.766Z",
+    "action": "FORGOT_PASSWORD_REQUEST",
+    "user": "System",
+    "details": "Reset requested for amannasar39@gmail.com"
+  },
+  {
+    "id": 1770839908149,
+    "timestamp": "2026-02-11T19:58:28.149Z",
+    "action": "FORGOT_PASSWORD_REQUEST",
+    "user": "System",
+    "details": "Reset requested for admin@dovoc.com"
+  },
+  {
+    "id": 1770839988179,
+    "timestamp": "2026-02-11T19:59:48.179Z",
+    "action": "FORGOT_PASSWORD_REQUEST",
+    "user": "System",
+    "details": "Reset requested for amannasar39@gmail.com"
+  },
+  {
+    "id": 1770840423773,
+    "timestamp": "2026-02-11T20:07:03.773Z",
+    "action": "REGISTER_CUSTOMER",
+    "user": "System",
+    "details": "New customer registered: blindbk23@gmail.com"
+  },
+  {
+    "id": 1770840478344,
+    "timestamp": "2026-02-11T20:07:58.344Z",
+    "action": "LOGIN",
+    "user": "dovoc",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770841134427,
+    "timestamp": "2026-02-11T20:18:54.427Z",
+    "action": "LOGIN",
+    "user": "dovoc",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770906094511,
+    "timestamp": "2026-02-12T14:21:34.511Z",
+    "action": "LOGIN",
+    "user": "dovoc",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770906190002,
+    "timestamp": "2026-02-12T14:23:10.002Z",
+    "action": "LOGIN",
+    "user": "dovoc",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1770906589883,
+    "timestamp": "2026-02-12T14:29:49.883Z",
+    "action": "LOGIN",
+    "user": "dovoc",
+    "details": "Admin logged in successfully"
   }
 ]

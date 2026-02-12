@@ -1,4 +1,5 @@
-import { Facebook, Instagram, Twitter, Leaf } from 'lucide-react';
+import { Instagram, Leaf } from 'lucide-react';
+import { FaWhatsapp } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
@@ -16,15 +17,12 @@ const Footer = () => {
                             Pure. Organic. Handcrafted with Love.
                             Sustainable products for a clearer conscience and a cleaner planet.
                         </p>
-                        <div className="flex space-x-4">
+                        <div className="flex space-x-4 items-center">
                             <a href="https://www.instagram.com/dovoc_handcrafts?igsh=eXZwbzZ2eTByc2Zk" target="_blank" rel="noopener noreferrer" className="text-dovoc-green hover:text-dovoc-brown">
                                 <Instagram className="h-5 w-5" />
                             </a>
-                            <a href="#" className="text-dovoc-green hover:text-dovoc-brown">
-                                <Facebook className="h-5 w-5" />
-                            </a>
-                            <a href="#" className="text-dovoc-green hover:text-dovoc-brown">
-                                <Twitter className="h-5 w-5" />
+                            <a href="https://chat.whatsapp.com/CfsEKo4ejVF6TgfAGe6sJJ?mode=gi_t" target="_blank" rel="noopener noreferrer" className="text-dovoc-green hover:text-dovoc-brown">
+                                <FaWhatsapp className="h-5 w-5" />
                             </a>
                         </div>
                     </div>
@@ -33,10 +31,11 @@ const Footer = () => {
                     <div>
                         <h4 className="font-bold text-lg mb-4">Shop</h4>
                         <ul className="space-y-2 text-dovoc-brown">
-                            <li><a href="#" className="hover:text-dovoc-green">All Products</a></li>
-                            <li><a href="#" className="hover:text-dovoc-green">Organic Food</a></li>
-                            <li><a href="#" className="hover:text-dovoc-green">Handmade Decor</a></li>
-                            <li><a href="#" className="hover:text-dovoc-green">Eco Essentials</a></li>
+                            <li><Link to="/shop?category=skincare" className="hover:text-dovoc-green">Skincare</Link></li>
+                            <li><Link to="/shop?category=haircare" className="hover:text-dovoc-green">Haircare</Link></li>
+                            <li><Link to="/shop?category=body-care" className="hover:text-dovoc-green">Body Care</Link></li>
+                            <li><Link to="/shop?category=home-care" className="hover:text-dovoc-green">Home Care</Link></li>
+                            <li><Link to="/shop?category=fragrance" className="hover:text-dovoc-green">Fragrance</Link></li>
                         </ul>
                     </div>
 
@@ -65,7 +64,9 @@ const Footer = () => {
                             e.preventDefault();
                             const email = e.target.email.value;
                             try {
-                                const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/newsletter/subscribe`, {
+                                const apiUrl = import.meta.env.VITE_API_URL || '';
+                                console.log("Attempting to subscribe at:", `${apiUrl}/api/newsletter/subscribe`);
+                                const res = await fetch(`${apiUrl}/api/newsletter/subscribe`, {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
                                     body: JSON.stringify({ email })
@@ -78,7 +79,8 @@ const Footer = () => {
                                     alert(data.message || 'Subscription failed');
                                 }
                             } catch (err) {
-                                alert('Failed to connect to server');
+                                console.error("Subscription error:", err);
+                                alert(`Failed to connect to server: ${err.message}`);
                             }
                         }}>
                             <input
@@ -99,7 +101,7 @@ const Footer = () => {
                     <p>&copy; {new Date().getFullYear()} Dovoc Eco Life. All rights reserved.</p>
                 </div>
             </div>
-        </footer>
+        </footer >
     );
 };
 

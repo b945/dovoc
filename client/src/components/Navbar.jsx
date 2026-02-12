@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Menu, X, Search, Leaf, LayoutDashboard } from 'lucide-react';
+import { ShoppingCart, Menu, X, Search, LayoutDashboard } from 'lucide-react';
 
 import { useCart } from '../context/CartContext';
 
@@ -45,10 +45,8 @@ const Navbar = () => {
                 <div className="flex justify-between h-20 items-center">
                     {/* Logo */}
                     <Link to="/" className="flex items-center space-x-2 group">
-                        <Leaf className="h-8 w-8 text-dovoc-green transform group-hover:rotate-12 transition-transform duration-300" />
-                        <span className="text-2xl font-bold font-serif text-dovoc-dark tracking-wide">
-                            Dovoc <span className="text-dovoc-green">Eco Life</span>
-                        </span>
+                        <img src="/dovoc-logo-new.png" alt="Dovoc Eco Life" className="h-12 w-auto object-contain" />
+                        <span className="text-2xl font-bold text-dovoc-green tracking-tight">Dovoc</span>
                     </Link>
 
                     {/* Desktop Menu */}

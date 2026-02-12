@@ -57,8 +57,8 @@ router.post('/', async (req, res) => {
         const { password: _, ...safeUser } = newUser;
         res.status(201).json({ id: docRef.id, ...safeUser });
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "Error creating user" });
+        console.error("Error creating user:", err);
+        res.status(500).json({ message: `Error creating user: ${err.message}` });
     }
 });
 

@@ -18,6 +18,7 @@ const AdminDashboard = () => {
     const [selectedOrder, setSelectedOrder] = useState(null); // For viewing customer details
     const [editingProduct, setEditingProduct] = useState(null); // For Add/Edit product
     const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+    const [uploadedImages, setUploadedImages] = useState([]); // For handling multiple images
 
     useEffect(() => {
         const token = localStorage.getItem('adminToken');
@@ -126,7 +127,8 @@ const AdminDashboard = () => {
                 fetchData();
                 e.target.reset();
             } else {
-                alert("Failed to add user");
+                const data = await res.json();
+                alert(`Failed to add user: ${data.message || res.statusText}`);
             }
         } catch (err) {
             console.error(err);
@@ -226,6 +228,45 @@ const AdminDashboard = () => {
         }
     };
 
+    const handleImageUpload = async (e) => {
+        const files = Array.from(e.target.files);
+        if (files.length === 0) return;
+
+        // Show loading state could be better, but for now simple alert or just processing
+        // We'll process sequentially
+        const newImages = [];
+        const btn = e.target;
+        btn.disabled = true;
+
+        for (const file of files) {
+            const formData = new FormData();
+            formData.append('image', file);
+
+            try {
+                const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    newImages.push(data.url);
+                } else {
+                    console.error("Upload failed for file:", file.name, data.message);
+                }
+            } catch (err) {
+                console.error("Upload error for file:", file.name, err);
+            }
+        }
+
+        setUploadedImages([...uploadedImages, ...newImages]);
+        btn.disabled = false;
+        e.target.value = ''; // Reset input
+    };
+
+    const handleRemoveImage = (indexToRemove) => {
+        setUploadedImages(uploadedImages.filter((_, index) => index !== indexToRemove));
+    };
+
     const handleSaveProduct = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -235,7 +276,7 @@ const AdminDashboard = () => {
             price: parseFloat(formData.get('price')),
             rating: parseFloat(formData.get('rating')),
             image: formData.get('image'),
-            images: formData.get('images') ? formData.get('images').split('\n').filter(url => url.trim() !== '') : [],
+            images: uploadedImages, // Use state instead of form data for the array
             stock: parseInt(formData.get('stock')) || 0,
             discount: parseFloat(formData.get('discount')) || 0,
             organic: formData.get('organic') === 'on',
@@ -245,10 +286,11 @@ const AdminDashboard = () => {
             description: formData.get('description'),
         };
 
-        // sync main image if images array is provided but main image is simple default
+        // sync main image: if we have uploaded images but no main image set (or default), use the first one
         if (productData.images.length > 0 && (!productData.image || productData.image === '/assets/')) {
             productData.image = productData.images[0];
         } else if (productData.image && productData.images.length === 0) {
+            // if main image is set but images array is empty, ensure main image is in array
             productData.images = [productData.image];
         }
 
@@ -275,6 +317,12 @@ const AdminDashboard = () => {
 
     const openProductModal = (product = null) => {
         setEditingProduct(product);
+        // Initialize uploaded images
+        if (product) {
+            setUploadedImages(product.images && product.images.length > 0 ? product.images : (product.image ? [product.image] : []));
+        } else {
+            setUploadedImages([]);
+        }
         setIsProductModalOpen(true);
     };
 
@@ -570,6 +618,10 @@ const AdminDashboard = () => {
                                     <div>
                                         <label className="block text-xs font-bold text-gray-500 mb-1">Name</label>
                                         <input required name="name" className="w-full border rounded px-3 py-2 text-sm" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-500 mb-1">Email</label>
+                                        <input required name="email" type="email" className="w-full border rounded px-3 py-2 text-sm" />
                                     </div>
                                     <div>
                                         <label className="block text-xs font-bold text-gray-500 mb-1">Role</label>
@@ -973,7 +1025,6 @@ const AdminDashboard = () => {
                                                 className="w-full border rounded px-3 py-2 text-sm"
                                             />
                                         </div>
-                                        {/* Hidden or Read-only input to store the URL so FormData picks it up */}
                                         <input
                                             id="mainImageInput"
                                             required
@@ -985,8 +1036,37 @@ const AdminDashboard = () => {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-500 mb-1">Additional Images (One URL per line)</label>
-                                        <textarea name="images" rows="3" defaultValue={editingProduct?.images?.join('\n') || ''} className="w-full border rounded px-3 py-2 text-sm" placeholder="/assets/img1.png&#10;/assets/img2.png"></textarea>
+                                        <label className="block text-xs font-bold text-gray-500 mb-1">Additional Images</label>
+                                        <div className="flex items-center space-x-2 mb-2">
+                                            <label className="cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-600 px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center">
+                                                <Plus className="h-4 w-4 mr-2" /> Upload Images
+                                                <input
+                                                    type="file"
+                                                    multiple
+                                                    accept="image/*"
+                                                    className="hidden"
+                                                    onChange={handleImageUpload}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        {uploadedImages.length > 0 && (
+                                            <div className="grid grid-cols-4 gap-2 mt-2">
+                                                {uploadedImages.map((img, idx) => (
+                                                    <div key={idx} className="relative group border rounded-md overflow-hidden h-20 w-20">
+                                                        <img src={img} alt={`Uploaded ${idx}`} className="w-full h-full object-cover" />
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => handleRemoveImage(idx)}
+                                                            className="absolute top-0 right-0 bg-red-500 text-white p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                        >
+                                                            <X className="h-3 w-3" />
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                        {/* Hidden textarea for compatibility/visual debug if needed, or just removed. We removed it. */}
                                     </div>
                                     <div>
                                         <label className="block text-xs font-bold text-gray-500 mb-1">Description</label>

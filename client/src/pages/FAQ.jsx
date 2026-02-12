@@ -55,6 +55,14 @@ const FAQ = () => {
         {
             question: "What payment methods do you accept?",
             answer: "We accept all major Credit/Debit cards, UPI (GPay, PhonePe, Paytm), and Net Banking. We also offer Cash on Delivery (COD) for select pincodes."
+        },
+        {
+            question: "Do you offer customized products for customers with allergies?",
+            answer: "Yes, we offer customization for selected handmade products. Customers can inform us about specific allergies or ingredient preferences, and we will customize the product wherever possible."
+        },
+        {
+            question: "Is a patch test necessary for organic products?",
+            answer: "Yes. Skin reactions vary from person to person. We recommend a patch test before use, even for organic and natural products."
         }
     ];
 
