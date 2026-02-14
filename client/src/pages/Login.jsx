@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
-// import { Leaf } from 'lucide-react'; // Removed unused icon
+import { Leaf, Eye, EyeOff } from 'lucide-react'; // Removed unused Leaf, re-adding for consistency if needed or just Eye/EyeOff
 
 const Login = () => {
     const navigate = useNavigate();
@@ -11,6 +11,7 @@ const Login = () => {
     const { addNotification } = useNotification();
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const from = location.state?.from?.pathname || '/shop';
 
@@ -67,13 +68,22 @@ const Login = () => {
                                 Forgot Password?
                             </Link>
                         </div>
-                        <input
-                            required
-                            type="password"
-                            className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-dovoc-green focus:outline-none"
-                            value={formData.password}
-                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                        />
+                        <div className="relative">
+                            <input
+                                required
+                                type={showPassword ? "text" : "password"}
+                                className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-dovoc-green focus:outline-none pr-10"
+                                value={formData.password}
+                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-2.5 text-gray-400 hover:text-dovoc-green"
+                            >
+                                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                            </button>
+                        </div>
                     </div>
                     <button
                         type="submit"

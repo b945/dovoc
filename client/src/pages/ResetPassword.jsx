@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useNotification } from '../context/NotificationContext';
-import { Leaf, Lock } from 'lucide-react';
+import { Leaf, Lock, Eye, EyeOff } from 'lucide-react';
 
 const ResetPassword = () => {
     const navigate = useNavigate();
@@ -13,6 +13,8 @@ const ResetPassword = () => {
 
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState(false);
 
     if (!token || !email) {
@@ -74,11 +76,18 @@ const ResetPassword = () => {
                             <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
                             <input
                                 required
-                                type="password"
-                                className="w-full pl-10 pr-4 py-2 border rounded-md focus:ring-2 focus:ring-dovoc-green focus:outline-none"
+                                type={showPassword ? "text" : "password"}
+                                className="w-full pl-10 pr-10 py-2 border rounded-md focus:ring-2 focus:ring-dovoc-green focus:outline-none"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-2.5 text-gray-400 hover:text-dovoc-green"
+                            >
+                                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                            </button>
                         </div>
                     </div>
                     <div>
@@ -87,11 +96,18 @@ const ResetPassword = () => {
                             <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
                             <input
                                 required
-                                type="password"
-                                className="w-full pl-10 pr-4 py-2 border rounded-md focus:ring-2 focus:ring-dovoc-green focus:outline-none"
+                                type={showConfirmPassword ? "text" : "password"}
+                                className="w-full pl-10 pr-10 py-2 border rounded-md focus:ring-2 focus:ring-dovoc-green focus:outline-none"
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                             />
+                            <button
+                                type="button"
+                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                className="absolute right-3 top-2.5 text-gray-400 hover:text-dovoc-green"
+                            >
+                                {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                            </button>
                         </div>
                     </div>
                     <button

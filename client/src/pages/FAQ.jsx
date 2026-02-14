@@ -44,10 +44,7 @@ const FAQ = () => {
             question: "Do you ship internationally?",
             answer: "Currently, we ship within India. We are working on expanding our logistic partners to serve international customers soon."
         },
-        {
-            question: "How do I care for my bamboo products?",
-            answer: "Bamboo is durable but natural. Avoid soaking it in water for long periods. Hand wash with mild soap and warm water, then towel dry immediately. Periodically applying a food-safe oil can extend its life."
-        },
+
         {
             question: "Can I cancel my order?",
             answer: "You can request a cancellation within 2 hours of placing the order by contacting our support team. Once the order is processed, it cannot be cancelled but can be returned after delivery."

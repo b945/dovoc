@@ -44,9 +44,10 @@ const Navbar = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-20 items-center">
                     {/* Logo */}
-                    <Link to="/" className="flex items-center space-x-2 group">
-                        <img src="/dovoc-logo-new.png" alt="Dovoc Eco Life" className="h-12 w-auto object-contain" />
-                        <span className="text-2xl font-bold text-dovoc-green tracking-tight">Dovoc</span>
+                    {/* Logo */}
+                    <Link to="/" className="flex items-center space-x-3 group">
+                        <img src="/dovoc-logo-new.png" alt="Dovoc Eco Life" className="h-20 w-auto object-contain transition-transform duration-300 transform group-hover:scale-105" />
+                        <span className="text-4xl font-bold text-dovoc-green tracking-tight">Dovoc</span>
                     </Link>
 
                     {/* Desktop Menu */}

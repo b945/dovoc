@@ -169,7 +169,7 @@ const ProductDetail = () => {
                             </div>
                             <div className="flex items-center text-sm text-gray-600">
                                 <Truck className="h-4 w-4 mr-3 text-dovoc-green" />
-                                Free Shipping on orders over ₹500
+                                Free Shipping on orders over ₹1000
                             </div>
                         </div>
 

@@ -23,7 +23,7 @@ const ShippingPolicy = () => {
                         <ul className="list-disc pl-5 space-y-2">
                             <li><strong>Standard Shipping:</strong> 5-7 business days - ₹50</li>
                             <li><strong>Express Shipping:</strong> 2-3 business days - ₹150</li>
-                            <li><strong>Free Shipping:</strong> Available for orders over ₹500</li>
+                            <li><strong>Free Shipping:</strong> Available for orders over ₹1000</li>
                         </ul>
                     </section>
 

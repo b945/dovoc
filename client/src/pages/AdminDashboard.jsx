@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check, X, LogOut, Plus, Edit, Trash2, Eye, Send } from 'lucide-react';
+import { Check, X, LogOut, Plus, Edit, Trash2, Eye, EyeOff, Send } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SecurityLogsView from '../components/SecurityLogsView';
 
@@ -19,6 +19,7 @@ const AdminDashboard = () => {
     const [editingProduct, setEditingProduct] = useState(null); // For Add/Edit product
     const [isProductModalOpen, setIsProductModalOpen] = useState(false);
     const [uploadedImages, setUploadedImages] = useState([]); // For handling multiple images
+    const [showPassword, setShowPassword] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem('adminToken');
@@ -613,7 +614,16 @@ const AdminDashboard = () => {
                                     </div>
                                     <div>
                                         <label className="block text-xs font-bold text-gray-500 mb-1">Password</label>
-                                        <input required name="password" type="password" className="w-full border rounded px-3 py-2 text-sm" />
+                                        <div className="relative">
+                                            <input required name="password" type={showPassword ? "text" : "password"} className="w-full border rounded px-3 py-2 text-sm pr-10" />
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                className="absolute right-2 top-2 text-gray-400 hover:text-dovoc-green"
+                                            >
+                                                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                            </button>
+                                        </div>
                                     </div>
                                     <div>
                                         <label className="block text-xs font-bold text-gray-500 mb-1">Name</label>
