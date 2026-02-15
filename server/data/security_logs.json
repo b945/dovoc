@@ -523,5 +523,19 @@
     "action": "LOGIN",
     "user": "dovoc",
     "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1771171122438,
+    "timestamp": "2026-02-15T15:58:42.438Z",
+    "action": "LOGIN",
+    "user": "dovoc",
+    "details": "Admin logged in successfully"
+  },
+  {
+    "id": 1771171122484,
+    "timestamp": "2026-02-15T15:58:42.484Z",
+    "action": "LOGIN",
+    "user": "dovoc",
+    "details": "Admin logged in successfully"
   }
 ]
