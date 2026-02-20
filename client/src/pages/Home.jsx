@@ -131,7 +131,7 @@ const Home = () => {
                         <div className="text-center col-span-3 text-gray-500">No featured products available.</div>
                     ) : (
                         products.map(product => (
-                            <div key={product.id} className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                            <Link to={`/product/${product.id}`} key={product.id} className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 block cursor-pointer">
                                 <div className="relative h-64 overflow-hidden">
                                     <img
                                         src={product.image}
@@ -159,7 +159,7 @@ const Home = () => {
                                         </button>
                                     </div>
                                 </div>
-                            </div>
+                            </Link>
                         ))
                     )}
                 </div>
