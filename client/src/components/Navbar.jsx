@@ -45,11 +45,8 @@ const Navbar = () => {
                 <div className="flex justify-between h-20 items-center">
                     {/* Logo */}
                     {/* Logo */}
-                    <Link to="/" className="flex items-center space-x-1 md:space-x-3 group min-w-0">
-                        <div className="w-12 h-12 md:w-16 md:h-16 overflow-hidden rounded flex items-center justify-center flex-shrink-0">
-                            <img src="/dovoc-eco-life-logo.png" alt="Dovoc Eco Life" className="w-full h-full object-contain transition-transform duration-300 transform group-hover:scale-105" />
-                        </div>
-                        <span className="text-xl md:text-2xl font-bold text-dovoc-green tracking-tight whitespace-nowrap">Dovoc Eco Life</span>
+                    <Link to="/" className="flex items-center group min-w-0 py-2">
+                        <img src="/dovoc-eco-life-logo.png" alt="Dovoc Eco Life" className="h-14 md:h-20 w-auto object-contain transition-transform duration-300 transform group-hover:scale-105" />
                     </Link>
 
                     {/* Desktop Menu */}
