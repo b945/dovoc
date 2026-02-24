@@ -47,7 +47,7 @@ const Navbar = () => {
                     {/* Logo */}
                     <Link to="/" className="flex items-center space-x-1 md:space-x-3 group min-w-0">
                         <div className="w-12 h-12 md:w-16 md:h-16 overflow-hidden rounded flex items-center justify-center flex-shrink-0">
-                            <img src="/auth-logo.png" alt="Dovoc Eco Life" className="w-[150%] h-[150%] object-cover object-[center_20%] mix-blend-multiply transition-transform duration-300 transform group-hover:scale-105" />
+                            <img src="/dovoc-eco-life-logo.png" alt="Dovoc Eco Life" className="w-full h-full object-contain transition-transform duration-300 transform group-hover:scale-105" />
                         </div>
                         <span className="text-xl md:text-2xl font-bold text-dovoc-green tracking-tight whitespace-nowrap">Dovoc Eco Life</span>
                     </Link>

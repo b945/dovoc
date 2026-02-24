@@ -45,7 +45,7 @@ const Login = () => {
         <div className="min-h-screen bg-dovoc-beige flex items-center justify-center p-4">
             <div className="bg-white p-8 rounded-xl shadow-lg max-w-md w-full">
                 <div className="text-center mb-8">
-                    <img src="/auth-logo.png" alt="Dovoc" className="h-40 mx-auto mb-4 object-contain" />
+                    <img src="/dovoc-eco-life-logo.png" alt="Dovoc" className="h-40 mx-auto mb-4 object-contain" />
                     <h2 className="text-2xl font-bold text-dovoc-dark">Welcome Back</h2>
                     <p className="text-gray-500">Sign in to continue shopping</p>
                 </div>
